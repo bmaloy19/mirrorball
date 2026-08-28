@@ -184,6 +184,15 @@
     ctx.restore();
   }
 
+  /* app.js removes the gate once someone clicks through it; drop any
+     ball that has left the page rather than holding the detached node
+     and re-testing it forever */
+  function prune() {
+    for (var i = balls.length - 1; i >= 0; i--) {
+      if (!balls[i].el.isConnected) balls.splice(i, 1);
+    }
+  }
+
   function visible(b) {
     if (!b.el.isConnected || b.el.offsetParent === null) return false;
     var r = b.el.getBoundingClientRect();
@@ -193,11 +202,9 @@
   function frame(now) {
     if (!running) return;
     var t = now / 1000;
-    for (var i = balls.length - 1; i >= 0; i--) {
+    prune();
+    for (var i = 0; i < balls.length; i++) {
       var b = balls[i];
-      /* the gate ball is removed from the page once someone gets past
-         it — drop it rather than testing a detached node every frame */
-      if (!b.el.isConnected) { balls.splice(i, 1); continue; }
       if (!b.w) { size(b); continue; }
       if (visible(b)) draw(b, t);
     }
@@ -242,7 +249,10 @@
 
   window.MirrorBall = {
     rescan: scan,
-    render: function (t) { balls.forEach(function (b) { if (!b.w) size(b); draw(b, t || 3.1); }); },
+    render: function (t) {
+      prune();
+      balls.forEach(function (b) { if (!b.w) size(b); draw(b, t || 3.1); });
+    },
     stop: stop,
     start: start,
     count: function () { return balls.length; }
