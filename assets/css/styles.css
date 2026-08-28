@@ -110,6 +110,12 @@ a{color:inherit}
 }
 @keyframes ballspin{to{background-position:-100% 0,0 0,-100% 0}}
 
+/* once ball.js takes over, the CSS facets and shading are just the
+   fallback underneath — the canvas draws the whole sphere */
+.ball__canvas{position:absolute;inset:0;width:100%;height:100%;border-radius:50%;display:block}
+.ball.is-rendered i,.ball.is-rendered s{display:none}
+.ball.is-rendered{background:#191320}
+
 .hero__ball{display:flex;flex-direction:column;align-items:center;margin-bottom:clamp(20px,4vw,34px)}
 .ball__cord{width:2px;height:clamp(26px,6vw,58px);
   background:linear-gradient(var(--silver-lo),rgba(142,148,163,0));order:-1}
@@ -147,14 +153,14 @@ a{color:inherit}
   transition:opacity .7s var(--ease),visibility .7s;
 }
 .gate.is-open{opacity:0;visibility:hidden}
-.gate__inner{max-width:34rem;text-align:center;display:grid;justify-items:center;gap:16px;
+.gate__inner{max-width:min(34rem,100%);text-align:center;display:grid;justify-items:center;gap:16px;
   animation:rise .9s var(--ease) both}
 .gate__eyebrow{font-size:.74rem;letter-spacing:.32em;text-transform:uppercase;color:var(--pink-hot);margin-top:8px}
 .gate__title{font-family:var(--serif);font-size:clamp(3.2rem,13vw,5.4rem);color:var(--silver-hi);letter-spacing:.02em}
 .gate__dots{color:var(--pink-hot)}
-.gate__copy{color:var(--text-dim);max-width:30rem;font-size:1.06rem}
+.gate__copy{color:var(--text-dim);max-width:min(30rem,100%);font-size:1.06rem}
 .gate__copy strong{color:var(--silver-hi);font-weight:400}
-.gate__fine{font-size:.82rem;color:#8d7382;max-width:26rem;margin-top:2px}
+.gate__fine{font-size:.82rem;color:#8d7382;max-width:min(26rem,100%);margin-top:2px}
 @keyframes rise{from{opacity:0;transform:translateY(20px)}}
 
 /* ═══ buttons ═══ */
