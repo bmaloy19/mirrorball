@@ -31,33 +31,68 @@ repo to GitHub Pages.
 
 ---
 
-## How the RSVP actually works
+## How the RSVP works right now
 
-The printed invitation says to **call or text Emily**, so by default the form does
-exactly that — it just does the typing for you. Guests fill in name, yes/no, party
-size, contact and notes; on submit the page composes the message and hands off to
-**Text it** (a pre-filled SMS), **Copy message**, or **Call instead**.
+**Short version: the site doesn't collect anything. It writes the text message for
+the guest and hands it to their phone. Emily's inbox is still the guest list.**
 
-That means it works the moment it's deployed, with no accounts and no service to
-sign up for. The trade-off: **nothing is stored on the site.** Emily's phone is
-still the guest list.
+### What the guest does
 
-### Collecting RSVPs online instead
+1. Fills in the form: **name**, **yes/no**, **party size** (only appears if they
+   said yes), **phone or email**, and an optional note.
+2. Hits **Send my RSVP**. Nothing is transmitted at this point — the page just
+   validates and composes a message.
+3. The form is replaced by a panel headed *"One more tap"* showing exactly what
+   will be sent, plus three buttons:
+   - **Text it** — opens their SMS app with Emily's number and the message
+     already filled in. They still have to hit send.
+   - **Copy message** — puts it on the clipboard to paste anywhere.
+   - **Call instead** — dials `712.358.0472`.
+4. *Change my answer* goes back to the form.
 
-If you'd rather they land in an inbox or a dashboard, open
-[`assets/js/app.js`](assets/js/app.js) and set one value at the top:
+### What Emily receives
+
+```
+RSVP — Sue's 60th, Oct 24
+Name: Jane Doe
+Attending: YES (2 guests)
+Reach me at: 515-555-0100
+Note: Bringing a gluten-free guest.
+```
+
+A regret reads `Attending: Sorry, cannot make it` and omits the party count. The
+`Note:` line only appears if they wrote one.
+
+### ⚠️ The catch worth understanding
+
+**An RSVP is not finished until the guest actually sends the text.** If someone
+fills in the form and then closes the tab at the "One more tap" step, nobody finds
+out — there is no record of it anywhere. The site has no database, no email, and no
+notification. It is a very good message-composer, not a guest list.
+
+In practice most people will tap through, and this matches what the printed
+invitation asks them to do. But if you want a list that can't be silently dropped,
+switch to a real endpoint (below).
+
+### Switching to collected RSVPs
+
+Open [`assets/js/app.js`](assets/js/app.js) and set one value at the top of
+`CONFIG`:
 
 ```js
 formEndpoint: 'https://formspree.io/f/xxxxxxx'
 ```
 
-The form then POSTs there as JSON and shows a "You're on the list" confirmation.
-Nothing else needs to change, and if the request fails it falls back to the text
-handoff so an answer is never lost. Any endpoint that accepts a JSON POST works —
-Formspree, Basin, a Google Apps Script web app.
+The form then POSTs JSON there and shows a *"You're on the list"* confirmation
+instead. Nothing else changes. If the request fails, it falls back to the text
+handoff so an answer is never lost. Any endpoint taking a JSON POST works —
+Formspree, Basin, a Google Apps Script bound to a Sheet.
 
-Everything else worth editing is in that same `CONFIG` block: names, phone, dates,
-venue.
+Doing this also means the page no longer needs Emily's number in it, which is the
+fix for the exposure noted in [Open items](#open-items).
+
+Everything else worth editing lives in that same `CONFIG` block: names, phone,
+dates, venue.
 
 ---
 
@@ -149,18 +184,8 @@ Already set up: the repo is https://github.com/bmaloy19/SueIs60 and Pages serves
 git push
 ```
 
-### About the link being public
-
-GitHub Pages sites are public URLs — anyone with the link can open it. Two things
-lean against that mattering:
-
-- `robots.txt` and a `noindex` meta tag keep it out of search results, so it
-  shouldn't surface by searching Sue's name.
-- The secret gate means an accidental open doesn't spill the whole page.
-
-It's still an unlisted public page with **Emily's phone number on it**. If that's
-a concern, the fix is to switch to a `formEndpoint` (above) and delete
-`hostPhone` / `hostPhoneDisplay` from the config — the form stops needing it.
+The site is a public URL and carries a phone number — see
+[Open items](#open-items) for what that means and how to change it.
 
 ---
 
@@ -185,18 +210,46 @@ attribute.
 
 ---
 
-## Known gaps
+## Open items
 
-- **The street address is not on the page.** It links to a Maps *search* for
-  "Wild Rose Casino & Hotel Jefferson Iowa" rather than assert an address that
-  might be wrong. Worth pasting the real one in.
-- **The end time on the calendar file is a guess** (11:00 pm). Fix `endsAt` in
-  `CONFIG` if the room is booked to a specific hour.
-- **No photos of Sue.** A hero photo or a small gallery would lift it a lot —
-  needs pictures.
-- **The background is a stylisation, not a copy** of the reference video — same
-  idea (ball plus radiating facet-light), rendered rather than filmed. Say if you
-  want it busier, slower, or in different colours.
-- **The music hasn't been heard on real speakers yet** — it was verified to build
-  and run without errors, and the pitches check out, but give it a listen and say
-  if you want it funkier, slower, or quieter.
+### Waiting on information
+
+| Item | Current state | What it needs |
+|---|---|---|
+| **Street address** | Links to a Maps *search* for "Wild Rose Casino & Hotel Jefferson Iowa" | The real street address, pasted into the Where card in `index.html` |
+| **Party end time** | The calendar file guesses **11:00 pm** | The actual end time → `CONFIG.endsAt` in `app.js` |
+| **Photos of Sue** | None on the page | Pictures. A hero shot or a small gallery would lift this more than anything else on this list |
+| **Who keeps the list** | Texts to Emily, nothing stored | A decision — is the SMS handoff what Emily actually wants, or should RSVPs land in a form/inbox? See [How the RSVP works](#how-the-rsvp-works-right-now) |
+
+### Waiting on your eyes
+
+Two things can't be verified from here and need a real device:
+
+- **The music has never been heard on speakers.** It's verified to build and run
+  without errors and the pitches check out exactly, but nobody has actually
+  listened to it. Say if you want it funkier, slower, or quieter.
+- **The background's motion.** The spin is currently `0.027` rad/s — about four
+  minutes per revolution. Frames had to be driven manually to capture screenshots
+  (the preview pane reports the tab as hidden, which stops `requestAnimationFrame`),
+  so the *feel* of the movement is unverified. `Beams.set('spin', 0.04)` in the
+  browser console will let you try a faster setting live.
+
+### Consequences of being live
+
+- **The site is public and carries Emily's phone number.** `noindex` plus
+  `robots.txt` keep it out of search results, and the "Shhhh" gate stops an
+  accidental open from spilling the page — but it's a guessable URL on the open
+  internet. Setting a `formEndpoint` and deleting `hostPhone` / `hostPhoneDisplay`
+  removes the number entirely.
+- **The repo is public**, which a free GitHub account requires for Pages. Note that
+  making it private later would *not* hide the site — Pages sites are public
+  regardless of repo visibility.
+- **To take it down fast:** `gh api -X DELETE repos/bmaloy19/SueIs60/pages`
+
+### Deliberately not done
+
+- **Real 70's records.** The soundtrack is synthesized precisely so nothing
+  copyrighted ships here. Actual songs would need a licensed Spotify or Apple Music
+  embed — see [The music](#the-music).
+- **The reference video as a background.** Rebuilt in canvas rather than
+  downloaded, for the reasons in [The background](#the-background).
