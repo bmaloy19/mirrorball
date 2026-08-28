@@ -8,7 +8,7 @@ repo to GitHub Pages.
 
 - **Saturday, October 24, 2026**
 - Wild Rose Casino & Hotel — Jefferson, Iowa
-- RSVP to Emily McLaughlin · 712.358.0472
+- RSVPs are **emailed** from the form; the printed invitation also says to call or text Emily McLaughlin · 712.358.0472
 - **It's a surprise.** Please don't reveal it to the guest of honor.
 
 ---
@@ -33,66 +33,58 @@ repo to GitHub Pages.
 
 ## How the RSVP works right now
 
-**Short version: the site doesn't collect anything. It writes the text message for
-the guest and hands it to their phone. Emily's inbox is still the guest list.**
+**Submissions are emailed.** The guest fills in the form, hits send, and the RSVP
+arrives as an email — no app to open, nothing for them to remember to do.
 
 ### What the guest does
 
 1. Fills in the form: **name**, **yes/no**, **party size** (only appears if they
    said yes), **phone or email**, and an optional note.
-2. Hits **Send my RSVP**. Nothing is transmitted at this point — the page just
-   validates and composes a message.
-3. The form is replaced by a panel headed *"One more tap"* showing exactly what
-   will be sent, plus three buttons:
-   - **Text it** — opens their SMS app with Emily's number and the message
-     already filled in. They still have to hit send.
-   - **Copy message** — puts it on the clipboard to paste anywhere.
-   - **Call instead** — dials `712.358.0472`.
-4. *Change my answer* goes back to the form.
+2. Hits **Send my RSVP**.
+3. Gets a *"You're on the list"* confirmation (and confetti, if they're coming).
 
-### What Emily receives
+That's it. Delivery is automatic.
 
-```
-RSVP — Sue's 60th, Oct 24
-Name: Jane Doe
-Attending: YES (2 guests)
-Reach me at: 515-555-0100
-Note: Bringing a gluten-free guest.
-```
+### What lands in the inbox
 
-A regret reads `Attending: Sorry, cannot make it` and omits the party count. The
-`Note:` line only appears if they wrote one.
+Subject: `Sue's 60th RSVP — Jane Doe (yes)` — or `(regrets)` — with a table:
 
-### ⚠️ The catch worth understanding
+| Field | |
+|---|---|
+| Name | Jane Doe |
+| Attending | YES |
+| Guests | 2 |
+| Reach them at | 515-555-0100 |
+| Note | Bringing a gluten-free guest. |
 
-**An RSVP is not finished until the guest actually sends the text.** If someone
-fills in the form and then closes the tab at the "One more tap" step, nobody finds
-out — there is no record of it anywhere. The site has no database, no email, and no
-notification. It is a very good message-composer, not a guest list.
+### How delivery works
 
-In practice most people will tap through, and this matches what the printed
-invitation asks them to do. But if you want a list that can't be silently dropped,
-switch to a real endpoint (below).
-
-### Switching to collected RSVPs
-
-Open [`assets/js/app.js`](assets/js/app.js) and set one value at the top of
-`CONFIG`:
+Posts through **FormSubmit**, which needs no account. Set one value in
+[`assets/js/app.js`](assets/js/app.js):
 
 ```js
-formEndpoint: 'https://formspree.io/f/xxxxxxx'
+rsvpEmail: 'bmaloy19@gmail.com',
 ```
 
-The form then POSTs JSON there and shows a *"You're on the list"* confirmation
-instead. Nothing else changes. If the request fails, it falls back to the text
-handoff so an answer is never lost. Any endpoint taking a JSON POST works —
-Formspree, Basin, a Google Apps Script bound to a Sheet.
+**A new address must be activated once.** The first submission to it makes
+FormSubmit email that address an *"Activate Form"* link; real RSVPs only start
+arriving after someone clicks it. Until then the page correctly refuses to claim
+success — see below.
 
-Doing this also means the page no longer needs Emily's number in it, which is the
-fix for the exposure noted in [Open items](#open-items).
+To post somewhere else instead (Formspree, Basin, a Google Apps Script bound to a
+Sheet), set `formEndpoint` and `rsvpEmail` is ignored for delivery.
 
-Everything else worth editing lives in that same `CONFIG` block: names, phone,
-dates, venue.
+### If delivery fails
+
+The page never tells a guest they're on the list unless the RSVP actually went
+through. FormSubmit answers **HTTP 200 with `success:"false"`** for an
+unactivated address, so a plain status-code check would confirm an RSVP that
+went nowhere; the code checks the response body, not just the status.
+
+On any failure — no network, unactivated address, provider error — it falls back
+to the old handoff panel: **Email it** (opens a pre-written email), **Copy
+message**, or **Call instead** (`712.358.0472`, per the printed invitation). An
+answer is never silently dropped.
 
 ---
 
@@ -219,20 +211,19 @@ attribute.
 | **Street address** | Links to a Maps *search* for "Wild Rose Casino & Hotel Jefferson Iowa" | The real street address, pasted into the Where card in `index.html` |
 | **Party end time** | The calendar file guesses **11:00 pm** | The actual end time → `CONFIG.endsAt` in `app.js` |
 | **Photos of Sue** | None on the page | Pictures. A hero shot or a small gallery would lift this more than anything else on this list |
-| **Who keeps the list** | Texts to Emily, nothing stored | A decision — is the SMS handoff what Emily actually wants, or should RSVPs land in a form/inbox? See [How the RSVP works](#how-the-rsvp-works-right-now) |
+| **RSVP address** | Pointed at a **test inbox** (`bmaloy19@gmail.com`) and awaiting activation | Click the FormSubmit *"Activate Form"* email, then change `rsvpEmail` to whoever really keeps the list before the link goes out |
 
 ### Waiting on your eyes
 
-Two things can't be verified from here and need a real device:
-
-- **The music has never been heard on speakers.** It's verified to build and run
-  without errors and the pitches check out exactly, but nobody has actually
-  listened to it. Say if you want it funkier, slower, or quieter.
-- **The background's motion.** The spin is currently `0.027` rad/s — about four
-  minutes per revolution. Frames had to be driven manually to capture screenshots
-  (the preview pane reports the tab as hidden, which stops `requestAnimationFrame`),
-  so the *feel* of the movement is unverified. `Beams.set('spin', 0.04)` in the
-  browser console will let you try a faster setting live.
+- ~~The music~~ — **approved, no changes wanted.**
+- **How the background reads in motion.** Everything static about it is verified:
+  the beams originate exactly on the ball at every screen size, the colours and
+  brightness are right, and a single frame stands on its own. What is *not*
+  verified is the animation — whether the rotation reads as a gentle turn, is too
+  slow to notice, or pulls focus from the text. The preview pane reports the tab
+  as hidden, which stops `requestAnimationFrame`, so frames had to be drawn by
+  hand to screenshot. Currently `0.027` rad/s, about four minutes per revolution.
+  `Beams.set('spin', 0.04)` in the browser console tries a faster setting live.
 
 ### Consequences of being live
 

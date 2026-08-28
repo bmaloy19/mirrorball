@@ -16,18 +16,25 @@
     // Who's keeping the guest list.
     host:      'Emily McLaughlin',
     hostFirst: 'Emily',
-    hostPhone: '+17123580472',      // dial/text target
+    hostPhone: '+17123580472',      // "Call instead", per the printed invite
     hostPhoneDisplay: '712.358.0472',
 
-    /* ── How RSVPs get collected ──────────────────────────────
-       null  → the form hands off to a pre-written text message to
-               the host, which is exactly what the printed invite
-               asks guests to do. Works with zero setup.
+    /* ── Where RSVPs are delivered ────────────────────────────
+       Every submission is emailed here. CHANGE THIS to whoever is
+       actually keeping the list before the link goes out — it is
+       currently pointed at a test inbox.
 
-       "https://formspree.io/f/xxxxxxx"
-             → the form POSTs there instead and responses land in
-               an inbox / dashboard. Nothing else needs to change.
+       Delivery runs through FormSubmit, which needs no account:
+       the first submission to a new address sends that address a
+       one-time activation link, and real RSVPs arrive after it is
+       clicked. If the POST ever fails, the page falls back to
+       opening a pre-written email so an answer is never lost.
        ───────────────────────────────────────────────────────── */
+    rsvpEmail: 'bmaloy19@gmail.com',
+
+    /* Override to post somewhere else entirely (Formspree, Basin,
+       a Google Apps Script). null = build a FormSubmit endpoint
+       from rsvpEmail above. */
     formEndpoint: null
   };
 
@@ -236,7 +243,13 @@
     var party  = $('#party-field');
 
     $('#rsvp-host').textContent = CONFIG.host;
-    $('#sent-host').textContent = CONFIG.hostFirst;
+
+    /* one place to change the address; the endpoint follows it */
+    function endpoint() {
+      if (CONFIG.formEndpoint) return CONFIG.formEndpoint;
+      if (CONFIG.rsvpEmail) return 'https://formsubmit.co/ajax/' + encodeURIComponent(CONFIG.rsvpEmail);
+      return null;
+    }
 
     /* "how many in your party" only matters if they're coming */
     $$('input[name=attending]').forEach(function (r) {
@@ -290,25 +303,23 @@
       return out.join('\n');
     }
 
-    /* iOS wants sms:number&body=, Android wants sms:number?body= */
-    function smsHref(msg) {
-      var ios = /iPad|iPhone|iPod/.test(navigator.userAgent) ||
-                (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
-      return 'sms:' + CONFIG.hostPhone + (ios ? '&' : '?') + 'body=' + encodeURIComponent(msg);
+    function mailtoHref(d, msg) {
+      return 'mailto:' + CONFIG.rsvpEmail +
+             '?subject=' + encodeURIComponent("Sue's 60th RSVP — " + d.name) +
+             '&body=' + encodeURIComponent(msg);
     }
 
     function showHandoff(d) {
       var msg = compose(d);
       $('#sent-msg').textContent = msg;
-      $('#btn-sms').href  = smsHref(msg);
-      $('#btn-call').href = 'tel:' + CONFIG.hostPhone;
-      $('#sent-phone-link').href = 'tel:' + CONFIG.hostPhone;
+      $('#btn-email').href = mailtoHref(d, msg);
+      $('#btn-call').href  = 'tel:' + CONFIG.hostPhone;
       form.hidden = true;
       sent.hidden = false;
       sent.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth', block: 'center' });
 
       $('#btn-copy').onclick = function () {
-        var done = function () { toast('Copied — paste it into a text'); };
+        var done = function () { toast('Copied — paste it into an email'); };
         if (navigator.clipboard && navigator.clipboard.writeText) {
           navigator.clipboard.writeText(msg).then(done, legacyCopy);
         } else { legacyCopy(); }
@@ -331,19 +342,31 @@
       btn.disabled = true;
       btn.textContent = 'Sending…';
 
-      fetch(CONFIG.formEndpoint, {
+      fetch(endpoint(), {
         method: 'POST',
         headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          name: d.name,
-          attending: d.attending,
-          party: d.attending === 'yes' ? d.party : '0',
-          contact: d.contact,
-          note: d.note,
-          _subject: "Sue's 60th RSVP — " + d.name
+          Name:      d.name,
+          Attending: d.attending === 'yes' ? 'YES' : 'No',
+          Guests:    d.attending === 'yes' ? d.party : '0',
+          'Reach them at': d.contact,
+          Note:      d.note || '—',
+          _subject:  "Sue's 60th RSVP — " + d.name +
+                     (d.attending === 'yes' ? ' (yes)' : ' (regrets)'),
+          _template: 'table',
+          _captcha:  'false'
         })
       }).then(function (r) {
-        if (!r.ok) throw new Error('bad status ' + r.status);
+        if (!r.ok) throw new Error('http ' + r.status);
+        return r.json().catch(function () { return null; });
+      }).then(function (j) {
+        /* A 200 is not proof of delivery. FormSubmit answers 200 with
+           success:"false" until the destination address has been
+           activated, so trusting the status code alone would tell the
+           guest they're on the list while the RSVP went nowhere. */
+        if (j && typeof j.success !== 'undefined' && String(j.success) !== 'true') {
+          throw new Error(j.message || 'not delivered');
+        }
         form.hidden = true;
         posted.hidden = false;
         $('#posted-copy').textContent = d.attending === 'yes'
@@ -352,9 +375,9 @@
         posted.scrollIntoView({ behavior: reduced ? 'auto' : 'smooth', block: 'center' });
         if (d.attending === 'yes') confetti();
       }).catch(function () {
-        /* the network let us down — fall back to the text-message
-           handoff rather than losing the guest's answer */
-        toast("Couldn't send online — text it instead");
+        /* couldn't deliver — fall back to opening a pre-written email
+           rather than losing the guest's answer */
+        toast("Couldn't send automatically — email it instead");
         showHandoff(d);
       }).then(function () {
         btn.disabled = false;
@@ -367,7 +390,7 @@
       var d = read();
       if (!validate(d)) return;
 
-      if (CONFIG.formEndpoint) { post(d, $('button[type=submit]', form)); return; }
+      if (endpoint()) { post(d, $('button[type=submit]', form)); return; }
 
       showHandoff(d);
       if (d.attending === 'yes') confetti();
