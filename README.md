@@ -1,22 +1,28 @@
-# Sue is 60 — Let's Celebrate
+# mirrorball
 
-A one-page site for **Sue Kirke's surprise 60th**, with an RSVP form and a 70's
-disco soundtrack. Static — no backend, no build step, deploys straight from this
-repo to GitHub Pages.
+A private one-page invitation site for a surprise birthday party.
 
-**Live:** https://bmaloy19.github.io/SueIs60/
+> **Names, dates and the venue are deliberately kept out of this README.** GitHub
+> indexes public repos, so anything written here is searchable in a way the site
+> itself is not — the page carries `noindex`. The real details live in the
+> `CONFIG` block in [`assets/js/app.js`](assets/js/app.js) and in `index.html`.
 
-- **Saturday, October 24, 2026**
-- Wild Rose Casino & Hotel — Jefferson, Iowa
-- RSVPs are **emailed** from the form; the printed invitation also says to call or text Emily McLaughlin · 712.358.0472
-- **It's a surprise.** Please don't reveal it to the guest of honor.
+An RSVP form and a 70's disco soundtrack. Static — no backend, no build step,
+deploys straight from this repo to GitHub Pages.
+
+**Live:** https://bmaloy19.github.io/mirrorball/
+
+- RSVPs are **emailed** from the form; the printed invitation also offers a phone
+  number, wired to the **Call instead** button
+- **It's a surprise.** Please don't reveal it to the guest of honour.
 
 ---
 
 ## The page, top to bottom
 
 1. **The secret gate.** A full-screen "Shhhh…" splash before anything else, so
-   nobody opens the link next to Sue and gets the whole thing on screen. Tapping
+   nobody opens the link beside the guest of honour and gets the whole thing on
+   screen. Tapping
    *I can keep a secret* remembers the choice (localStorage), so it only appears
    once per browser. It sets the tone; it isn't security.
 2. **The invitation.** A near-copy of the printed card — checkerboard frame,
@@ -45,7 +51,7 @@ That's it. Delivery is automatic.
 
 ### What lands in the inbox
 
-Subject: `Sue's 60th RSVP — Jane Doe (yes)` — or `(regrets)` — with a table:
+Subject: `<event> RSVP — Jane Doe (yes)` — or `(regrets)` — with a table:
 
 | Field | |
 |---|---|
@@ -81,7 +87,8 @@ went nowhere; the code checks the response body, not just the status.
 
 On any failure — no network, unactivated address, provider error — it falls back
 to the old handoff panel: **Email it** (opens a pre-written email), **Copy
-message**, or **Call instead** (`712.358.0472`, per the printed invitation). An
+message**, or **Call instead** (the number in `CONFIG`, per the printed
+invitation). An
 answer is never silently dropped.
 
 ---
@@ -189,7 +196,7 @@ To check it on your phone on the same wifi: `ipconfig getifaddr en0`, then open
 
 ## Deploy
 
-Already set up: the repo is https://github.com/bmaloy19/SueIs60 and Pages serves
+Already set up: the repo is https://github.com/bmaloy19/mirrorball and Pages serves
 `main` from the root. No Action needed — it's plain files, so **every push to
 `main` redeploys**, usually within a minute.
 
@@ -237,9 +244,9 @@ attribute.
 | Item | Current state | What it needs |
 |---|---|---|
 | **Party end time** | The calendar file guesses **11:00 pm** | The actual end time → `CONFIG.endsAt` in `app.js` |
-| **Photos of Sue** | None on the page | Pictures. A hero shot or a small gallery would lift this more than anything else on this list |
+| **Photos of the guest of honour** | None on the page | Pictures. A hero shot or a small gallery would lift this more than anything else on this list |
 | **RSVP address** | Pointed at a **test inbox** (`bmaloy19@gmail.com`) and awaiting activation | Click the FormSubmit *"Activate Form"* email, then set `rsvpEmail` to whoever really keeps the list and delete `testInbox` |
-| **Who the form names** | The form tells guests it goes to `listKeeper` — currently *Emily McLaughlin* — while delivery goes to the test inbox | Keep `listKeeper` and `rsvpEmail` describing the same person. A console warning fires while they disagree |
+| **Who the form names** | The form names `listKeeper` to guests while delivery goes to the test inbox | Keep `listKeeper` and `rsvpEmail` describing the same person. A console warning fires while they disagree |
 
 ### Waiting on your eyes
 
@@ -248,7 +255,7 @@ attribute.
 
 ### Consequences of being live
 
-- **The site is public and carries Emily's phone number.** The "Shhhh" gate stops
+- **The site is public and carries a personal phone number.** The "Shhhh" gate stops
   an accidental open from spilling the page, but it's a guessable URL on the open
   internet. Setting `rsvpEmail` and deleting `hostPhone` / `hostPhoneDisplay`
   removes the number entirely.
@@ -257,14 +264,13 @@ attribute.
   Blocking crawlers would be worse: one that can't fetch the page never sees the
   noindex, and Google will still list a bare URL it found linked elsewhere.
 - **The repo is a bigger exposure than the site.** Public GitHub repos are
-  indexed by Google, and this one is named `SueIs60`, with a README naming her
-  throughout and linking to the live URL. The description has been made
-  anonymous, but the name and README have not. Renaming the repo would change
-  the Pages URL, so it is worth doing *before* the link goes out, not after.
+  indexed by Google in a way the site itself is not. The repo name, description
+  and this README have all been made anonymous for that reason — keep them that
+  way. Anything identifying belongs in the page or in `CONFIG`, not here.
 - **The repo is public**, which a free GitHub account requires for Pages. Note that
   making it private later would *not* hide the site — Pages sites are public
   regardless of repo visibility.
-- **To take it down fast:** `gh api -X DELETE repos/bmaloy19/SueIs60/pages`
+- **To take it down fast:** `gh api -X DELETE repos/bmaloy19/mirrorball/pages`
 
 ### Deliberately not done
 
