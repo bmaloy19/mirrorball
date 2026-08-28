@@ -19,7 +19,7 @@
     intensity: 1,        // 0 calm ... 1.6 nightclub
     spokes:    54,       // how many beams leave the ball
     segments:  30,       // facet blocks along each beam
-    spin:      0.027,    // radians per second
+    spin:      0.810,    // rad/s — one turn every 7.8s, picked by eye
     originX:   0.5,      // where the light comes from, as a fraction
     originY:   0.19      //   of the viewport (matches the hanging ball)
   };
