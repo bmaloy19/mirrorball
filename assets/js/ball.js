@@ -193,8 +193,11 @@
   function frame(now) {
     if (!running) return;
     var t = now / 1000;
-    for (var i = 0; i < balls.length; i++) {
+    for (var i = balls.length - 1; i >= 0; i--) {
       var b = balls[i];
+      /* the gate ball is removed from the page once someone gets past
+         it — drop it rather than testing a detached node every frame */
+      if (!b.el.isConnected) { balls.splice(i, 1); continue; }
       if (!b.w) { size(b); continue; }
       if (visible(b)) draw(b, t);
     }
