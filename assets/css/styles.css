@@ -7,7 +7,8 @@
 /* ── fonts ─────────────────────────────────────────────── */
 @font-face{font-family:'Great Vibes';src:url(../fonts/great-vibes-400-normal.woff2)format('woff2');font-weight:400;font-display:swap}
 @font-face{font-family:'Playfair Display';src:url(../fonts/playfair-display-700-normal.woff2)format('woff2');font-weight:700;font-display:swap}
-@font-face{font-family:'Playfair Display';src:url(../fonts/playfair-display-500-normal.woff2)format('woff2');font-weight:500;font-display:swap}
+@font-face{font-family:'Playfair Display';src:url(../fonts/playfair-display-800-normal.woff2)format('woff2');font-weight:800;font-display:swap}
+@font-face{font-family:'Playfair Display';src:url(../fonts/playfair-display-900-normal.woff2)format('woff2');font-weight:900;font-display:swap}
 @font-face{font-family:'Playfair Display';src:url(../fonts/playfair-display-400-italic.woff2)format('woff2');font-weight:400;font-style:italic;font-display:swap}
 @font-face{font-family:'Jost';src:url(../fonts/jost-300-normal.woff2)format('woff2');font-weight:300;font-display:swap}
 @font-face{font-family:'Jost';src:url(../fonts/jost-400-normal.woff2)format('woff2');font-weight:400;font-display:swap}
@@ -246,24 +247,39 @@ main{position:relative;z-index:1}
 .kicker--tight{margin-top:.4em}
 .script{
   font-family:var(--script);font-weight:400;color:var(--pink);
-  font-size:clamp(3.1rem,13.5vw,4.9rem);line-height:.94;margin:.16em 0 .02em;
+  font-size:clamp(4.1rem,19vw,6.9rem);line-height:.8;margin:.16em 0 .08em;
   display:grid;
 }
-.script span:last-child{margin-top:-.1em}
 .sixty{
-  font-family:var(--serif);font-weight:700;
-  font-size:clamp(4.4rem,18vw,6.6rem);line-height:.9;margin:.06em 0 .04em;
+  font-family:var(--serif);font-weight:900;
+  font-size:clamp(5.6rem,23vw,8.4rem);line-height:.86;margin:.02em 0 .06em;
+  letter-spacing:-.01em;
 }
 .honoree{
-  font-family:var(--serif);font-weight:700;color:var(--pink);
-  font-size:clamp(1.9rem,7.6vw,2.9rem);letter-spacing:.03em;text-transform:uppercase;
+  font-family:var(--serif);font-weight:800;color:var(--pink);
+  font-size:clamp(2.3rem,9.7vw,3.7rem);letter-spacing:.01em;text-transform:uppercase;
 }
+/* the four silver sparkles scattered across the printed card */
+.card--invite .sparkle{
+  position:absolute;z-index:2;pointer-events:none;
+  width:var(--s,26px);height:var(--s,26px);
+  background:linear-gradient(150deg,#fff,#c6cad3 42%,#9aa0ad);
+  -webkit-mask:var(--star) center/contain no-repeat;
+          mask:var(--star) center/contain no-repeat;
+  --star:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 0c.7 7 4.3 11 12 12-7.7 1-11.3 5-12 12-.7-7-4.3-11-12-12 7.7-1 11.3-5 12-12z' fill='%23000'/%3E%3C/svg%3E");
+  opacity:.85;
+}
+.card--invite .sparkle--a{--s:30px;top:35%;right:2%}
+.card--invite .sparkle--b{--s:19px;top:41.5%;right:10%}
+.card--invite .sparkle--c{--s:26px;top:66%;left:3%}
+.card--invite .sparkle--d{--s:17px;top:70.5%;left:10.5%}
+
 .dot{display:block;width:9px;height:9px;border-radius:50%;background:var(--pink);margin:clamp(18px,4vw,26px) auto}
 .facts{list-style:none;margin:0;padding:0;display:grid;gap:.24em;
   font-size:clamp(.95rem,3.4vw,1.06rem);letter-spacing:.11em;text-transform:uppercase;color:var(--pink-deep)}
 .facts strong{font-weight:500;color:var(--pink)}
-.whisper{font-family:var(--serif);font-style:italic;color:var(--pink);
-  font-size:1.02rem;margin-top:clamp(16px,3.6vw,24px);letter-spacing:.01em}
+.whisper{font-family:var(--sans);font-weight:500;color:var(--pink);
+  font-size:1.05rem;margin-top:clamp(16px,3.6vw,24px);letter-spacing:.005em}
 .hero__actions{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-top:clamp(24px,5vw,34px)}
 .card--invite .btn--ghost{border-color:rgba(168,17,95,.42);color:var(--pink-deep)}
 .card--invite .btn--ghost:hover{border-color:var(--pink);color:var(--pink)}
@@ -455,6 +471,11 @@ main{position:relative;z-index:1}
 @media (max-width:820px){
   .where{grid-template-columns:1fr}
   .topbar__nav a:not(.topbar__cta){display:none}
+}
+/* the caps + letter-spacing on the date block wraps on small phones */
+@media (max-width:390px){
+  .facts{font-size:.84rem;letter-spacing:.06em}
+  .whisper{font-size:.98rem}
 }
 @media (max-width:560px){
   body{font-size:16px}

@@ -217,14 +217,7 @@ attribute.
 ### Waiting on your eyes
 
 - ~~The music~~ — **approved, no changes wanted.**
-- **How the background reads in motion.** Everything static about it is verified:
-  the beams originate exactly on the ball at every screen size, the colours and
-  brightness are right, and a single frame stands on its own. What is *not*
-  verified is the animation — whether the rotation reads as a gentle turn, is too
-  slow to notice, or pulls focus from the text. The preview pane reports the tab
-  as hidden, which stops `requestAnimationFrame`, so frames had to be drawn by
-  hand to screenshot. Currently `0.027` rad/s, about four minutes per revolution.
-  `Beams.set('spin', 0.04)` in the browser console tries a faster setting live.
+- ~~How the background reads in motion~~ — **approved.**
 
 ### Consequences of being live
 
