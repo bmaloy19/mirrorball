@@ -4,7 +4,7 @@ A one-page site for **Sue Kirke's surprise 60th**, with an RSVP form and a 70's
 disco soundtrack. Static — no backend, no build step, deploys straight from this
 repo to GitHub Pages.
 
-**Live:** _(not deployed yet — see [Deploy](#deploy))_
+**Live:** https://bmaloy19.github.io/SueIs60/
 
 - **Saturday, October 24, 2026**
 - Wild Rose Casino & Hotel — Jefferson, Iowa
@@ -141,15 +141,13 @@ To check it on your phone on the same wifi: `ipconfig getifaddr en0`, then open
 
 ## Deploy
 
-Push to GitHub, then **Settings → Pages → Source: Deploy from a branch →
-`main` / `(root)`**. No Action needed — it's plain files.
+Already set up: the repo is https://github.com/bmaloy19/SueIs60 and Pages serves
+`main` from the root. No Action needed — it's plain files, so **every push to
+`main` redeploys**, usually within a minute.
 
 ```bash
-git remote add origin https://github.com/bmaloy19/SueIs60.git
-git push -u origin main
+git push
 ```
-
-It'll be at `https://bmaloy19.github.io/SueIs60/`.
 
 ### About the link being public
 
