@@ -1,0 +1,290 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Sue is 60 — Let's Celebrate</title>
+
+<!-- It's a surprise. Keep it out of search results. -->
+<meta name="robots" content="noindex, nofollow">
+<meta name="description" content="A surprise 60th birthday party for Sue Kirke. October 24, 2026.">
+<meta name="theme-color" content="#150610">
+
+<link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
+
+<link rel="preload" as="font" type="font/woff2" href="assets/fonts/great-vibes-400-normal.woff2" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="assets/fonts/playfair-display-700-normal.woff2" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="assets/fonts/jost-300-normal.woff2" crossorigin>
+<link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body>
+
+<!-- ══ the secret gate ══ -->
+<div class="gate" id="gate" role="dialog" aria-modal="true" aria-labelledby="gate-title">
+  <div class="gate__inner">
+    <div class="ball ball--sm" aria-hidden="true"><i></i><s></s></div>
+    <p class="gate__eyebrow">Before you go any further</p>
+    <h1 class="gate__title" id="gate-title">Shhhh<span class="gate__dots">…</span></h1>
+    <p class="gate__copy">
+      You've found the plan for <strong>Sue Kirke's</strong> surprise 60th.
+      The whole night hinges on one thing: she has no idea.
+    </p>
+    <button class="btn btn--primary" id="gate-btn" type="button">I can keep a secret</button>
+    <p class="gate__fine">Don't post it, don't text her about it, don't leave this open on the counter.</p>
+  </div>
+</div>
+
+<!-- ══ ambient disco lighting ══ -->
+<div class="stage" aria-hidden="true">
+  <div class="stage__rays"></div>
+  <div class="stage__glow stage__glow--a"></div>
+  <div class="stage__glow stage__glow--b"></div>
+  <div class="stage__grain"></div>
+</div>
+
+<!-- ══ nav ══ -->
+<header class="topbar" id="topbar">
+  <a class="topbar__mark" href="#top"><span>Sue is 60</span></a>
+  <nav class="topbar__nav" aria-label="Sections">
+    <a href="#evening">The Evening</a>
+    <a href="#where">Where</a>
+    <a href="#rsvp" class="topbar__cta">RSVP</a>
+  </nav>
+</header>
+
+<main id="top">
+
+  <!-- ══ hero ══ -->
+  <section class="hero">
+    <div class="hero__ball">
+      <div class="ball" aria-hidden="true"><i></i><s></s></div>
+      <div class="ball__cord" aria-hidden="true"></div>
+    </div>
+
+    <div class="card card--invite" data-reveal>
+      <p class="kicker">Join us for a</p>
+      <h1 class="script">
+        <span>Surprise</span>
+        <span>Birthday Party</span>
+      </h1>
+      <p class="sixty foil" aria-label="60th">60</p>
+      <p class="kicker kicker--tight">Honoring</p>
+      <p class="honoree">Sue&nbsp;Kirke</p>
+
+      <span class="dot" aria-hidden="true"></span>
+
+      <ul class="facts">
+        <li><strong>Saturday, October 24, 2026</strong></li>
+        <li>Wild Rose Casino &amp; Hotel</li>
+        <li>Jefferson, Iowa</li>
+      </ul>
+
+      <p class="whisper">Shhhh… it's a surprise!</p>
+
+      <div class="hero__actions">
+        <a class="btn btn--primary" href="#rsvp">RSVP</a>
+        <button class="btn btn--ghost" type="button" id="ics-btn">Add to calendar</button>
+      </div>
+    </div>
+
+    <div class="checker" aria-hidden="true"></div>
+  </section>
+
+  <!-- ══ countdown ══ -->
+  <section class="countdown" aria-labelledby="cd-title">
+    <h2 class="section__title" id="cd-title">Until the lights go down</h2>
+    <div class="cd" id="cd" role="timer" aria-live="off">
+      <div class="cd__cell"><span class="cd__num foil" data-cd="days">—</span><span class="cd__lbl">days</span></div>
+      <div class="cd__cell"><span class="cd__num foil" data-cd="hours">—</span><span class="cd__lbl">hours</span></div>
+      <div class="cd__cell"><span class="cd__num foil" data-cd="mins">—</span><span class="cd__lbl">minutes</span></div>
+      <div class="cd__cell"><span class="cd__num foil" data-cd="secs">—</span><span class="cd__lbl">seconds</span></div>
+    </div>
+    <p class="cd__sr" id="cd-sr" aria-live="polite"></p>
+  </section>
+
+  <!-- ══ the evening ══ -->
+  <section class="section" id="evening" aria-labelledby="ev-title">
+    <p class="eyebrow">The run of show</p>
+    <h2 class="section__title section__title--big" id="ev-title">The Evening</h2>
+
+    <ol class="timeline">
+      <li class="tl" data-reveal>
+        <span class="tl__mark" aria-hidden="true"></span>
+        <p class="tl__time foil">4:00 <em>pm</em></p>
+        <h3 class="tl__what">Guest Check-In</h3>
+        <p class="tl__note">Outside Lucky's Sports Grill. Come early — everyone needs to be seated and quiet before she walks in.</p>
+      </li>
+      <li class="tl tl--star" data-reveal>
+        <span class="tl__mark" aria-hidden="true"></span>
+        <p class="tl__time foil">4:30 <em>pm</em></p>
+        <h3 class="tl__what">The Surprise</h3>
+        <p class="tl__note">The moment. Cocktails and hors d'oeuvres straight after.</p>
+      </li>
+      <li class="tl" data-reveal>
+        <span class="tl__mark" aria-hidden="true"></span>
+        <p class="tl__time foil">6:00 <em>pm</em></p>
+        <h3 class="tl__what">Concert Doors Open</h3>
+        <p class="tl__note"><strong>Pet Rock</strong> — the premier 70's tribute band.</p>
+      </li>
+      <li class="tl" data-reveal>
+        <span class="tl__mark" aria-hidden="true"></span>
+        <p class="tl__time foil">7:00 <em>pm</em></p>
+        <h3 class="tl__what">Concert Begins</h3>
+        <p class="tl__note">Dress for dancing. This is the part where the shoes come off.</p>
+      </li>
+      <li class="tl" data-reveal>
+        <span class="tl__mark" aria-hidden="true"></span>
+        <p class="tl__time foil">After <em>the show</em></p>
+        <h3 class="tl__what">The After-Party</h3>
+        <p class="tl__note">Post-concert celebration in Lucky's Sports Grill. Stay as long as you can.</p>
+      </li>
+    </ol>
+
+    <div class="band" data-reveal>
+      <div class="band__ball ball ball--sm" aria-hidden="true"><i></i><s></s></div>
+      <div>
+        <p class="band__label">Setting the mood</p>
+        <p class="band__copy">There's a 70's groove playing on this page. Hit the mirror ball in the corner and turn it up.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ where ══ -->
+  <section class="section section--alt" id="where" aria-labelledby="wh-title">
+    <p class="eyebrow">Getting there</p>
+    <h2 class="section__title section__title--big" id="wh-title">Where</h2>
+
+    <div class="where">
+      <div class="where__card" data-reveal>
+        <h3>Wild Rose Casino &amp; Hotel</h3>
+        <p class="where__loc">Jefferson, Iowa</p>
+        <p class="where__body">
+          Check in <strong>outside Lucky's Sports Grill</strong> — that's where the 4:00 pm
+          gathering happens, and where we all end up again after the concert.
+        </p>
+        <div class="where__actions">
+          <a class="btn btn--ghost" target="_blank" rel="noopener"
+             href="https://www.google.com/maps/search/?api=1&amp;query=Wild+Rose+Casino+%26+Hotel+Jefferson+Iowa">Open in Maps</a>
+        </div>
+      </div>
+
+      <div class="where__card where__card--tip" data-reveal>
+        <h3>Staying over?</h3>
+        <p class="where__body">
+          It's a hotel as well as a casino, and it's a late night with a live band.
+          Book a room early if you'd rather not drive home.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══ rsvp ══ -->
+  <section class="section" id="rsvp" aria-labelledby="rs-title">
+    <p class="eyebrow">Kindly</p>
+    <h2 class="section__title section__title--big" id="rs-title">RSVP</h2>
+
+    <div class="rsvp" data-reveal>
+      <form class="form" id="rsvp-form" novalidate>
+        <div class="field">
+          <label for="f-name">Your name<span class="req" aria-hidden="true">*</span></label>
+          <input id="f-name" name="name" type="text" autocomplete="name" required>
+          <p class="err" data-err-for="f-name"></p>
+        </div>
+
+        <fieldset class="field field--choice">
+          <legend>Can you make it?<span class="req" aria-hidden="true">*</span></legend>
+          <div class="choices">
+            <label class="choice">
+              <input type="radio" name="attending" value="yes" required>
+              <span class="choice__box"><strong>Yes</strong><small>Wouldn't miss it</small></span>
+            </label>
+            <label class="choice">
+              <input type="radio" name="attending" value="no">
+              <span class="choice__box"><strong>No</strong><small>Can't make it</small></span>
+            </label>
+          </div>
+          <p class="err" data-err-for="attending"></p>
+        </fieldset>
+
+        <div class="field" id="party-field" hidden>
+          <label for="f-party">How many in your party?</label>
+          <input id="f-party" name="party" type="number" inputmode="numeric" min="1" max="20" step="1" value="1">
+          <p class="hint">Counting yourself.</p>
+        </div>
+
+        <div class="field">
+          <label for="f-contact">Phone or email<span class="req" aria-hidden="true">*</span></label>
+          <input id="f-contact" name="contact" type="text" autocomplete="tel" required>
+          <p class="hint">So Emily can confirm you're on the list.</p>
+          <p class="err" data-err-for="f-contact"></p>
+        </div>
+
+        <div class="field">
+          <label for="f-note">Anything else?</label>
+          <textarea id="f-note" name="note" rows="3" placeholder="Dietary needs, arrival time, a message for Sue…"></textarea>
+        </div>
+
+        <button class="btn btn--primary btn--wide" type="submit">Send my RSVP</button>
+        <p class="form__fine">
+          Goes straight to <strong id="rsvp-host">Emily McLaughlin</strong>, who's keeping the list.
+        </p>
+      </form>
+
+      <!-- shown after submit -->
+      <div class="sent" id="sent" hidden>
+        <div class="sent__ball ball ball--sm" aria-hidden="true"><i></i><s></s></div>
+        <h3 class="sent__title">One more tap</h3>
+        <p class="sent__copy">
+          Here's your RSVP, ready to go. Send it to
+          <a id="sent-phone-link" href="#"><span id="sent-host">Emily</span></a> and you're on the list.
+        </p>
+        <pre class="sent__msg" id="sent-msg"></pre>
+        <div class="sent__actions">
+          <a class="btn btn--primary" id="btn-sms" href="#">Text it</a>
+          <button class="btn btn--ghost" type="button" id="btn-copy">Copy message</button>
+          <a class="btn btn--ghost" id="btn-call" href="#">Call instead</a>
+        </div>
+        <button class="linkish" type="button" id="btn-edit">← Change my answer</button>
+      </div>
+
+      <!-- shown after a successful online post (only when an endpoint is configured) -->
+      <div class="sent" id="posted" hidden>
+        <div class="sent__ball ball ball--sm" aria-hidden="true"><i></i><s></s></div>
+        <h3 class="sent__title">You're on the list</h3>
+        <p class="sent__copy" id="posted-copy">Thank you — see you on the 24th.</p>
+        <button class="linkish" type="button" id="btn-edit-2">← Send another</button>
+      </div>
+    </div>
+
+    <p class="secret-strip">
+      <span aria-hidden="true">✦</span>
+      Please do not reveal the event to the guest of honor
+      <span aria-hidden="true">✦</span>
+    </p>
+  </section>
+
+</main>
+
+<footer class="foot">
+  <div class="checker checker--thin" aria-hidden="true"></div>
+  <p class="foot__line">Sue is 60 — let's celebrate.</p>
+  <p class="foot__sub">
+    Planned by <strong>White Willow Events</strong> · Taylor Boesen
+  </p>
+  <p class="foot__sub foot__sub--dim">October 24, 2026 · Wild Rose Casino &amp; Hotel · Jefferson, Iowa</p>
+</footer>
+
+<!-- ══ music ══ -->
+<button class="music" id="music" type="button" aria-pressed="false" aria-label="Play 70's music">
+  <span class="music__ball ball ball--xs" aria-hidden="true"><i></i><s></s></span>
+  <span class="music__label" id="music-label">Turn it up</span>
+  <span class="music__eq" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+</button>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script src="assets/js/disco.js"></script>
+<script src="assets/js/app.js"></script>
+</body>
+</html>
