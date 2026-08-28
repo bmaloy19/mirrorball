@@ -211,7 +211,8 @@ attribute.
 | **Street address** | Links to a Maps *search* for "Wild Rose Casino & Hotel Jefferson Iowa" | The real street address, pasted into the Where card in `index.html` |
 | **Party end time** | The calendar file guesses **11:00 pm** | The actual end time → `CONFIG.endsAt` in `app.js` |
 | **Photos of Sue** | None on the page | Pictures. A hero shot or a small gallery would lift this more than anything else on this list |
-| **RSVP address** | Pointed at a **test inbox** (`bmaloy19@gmail.com`) and awaiting activation | Click the FormSubmit *"Activate Form"* email, then change `rsvpEmail` to whoever really keeps the list before the link goes out |
+| **RSVP address** | Pointed at a **test inbox** (`bmaloy19@gmail.com`) and awaiting activation | Click the FormSubmit *"Activate Form"* email, then set `rsvpEmail` to whoever really keeps the list and delete `testInbox` |
+| **Who the form names** | The form tells guests it goes to `listKeeper` — currently *Emily McLaughlin* — while delivery goes to the test inbox | Keep `listKeeper` and `rsvpEmail` describing the same person. A console warning fires while they disagree |
 
 ### Waiting on your eyes
 

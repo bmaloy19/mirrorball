@@ -32,6 +32,16 @@
        ───────────────────────────────────────────────────────── */
     rsvpEmail: 'bmaloy19@gmail.com',
 
+    /* Named on the form as the person keeping the list. Must describe
+       whoever actually reads rsvpEmail above — the page states this to
+       guests, so the two drifting apart makes the page lie about where
+       someone's details are going. */
+    listKeeper: 'Emily McLaughlin',
+
+    /* Delete once rsvpEmail is the real address; it only drives a
+       console warning that the test inbox is still wired up. */
+    testInbox: 'bmaloy19@gmail.com',
+
     /* Override to post somewhere else entirely (Formspree, Basin,
        a Google Apps Script). null = build a FormSubmit endpoint
        from rsvpEmail above. */
@@ -242,7 +252,15 @@
     var posted = $('#posted');
     var party  = $('#party-field');
 
-    $('#rsvp-host').textContent = CONFIG.host;
+    $('#rsvp-host').textContent = CONFIG.listKeeper || CONFIG.host;
+
+    if (CONFIG.testInbox && CONFIG.rsvpEmail === CONFIG.testInbox) {
+      console.warn(
+        '[RSVP] Still delivering to the test inbox (' + CONFIG.rsvpEmail + ') while the ' +
+        'form tells guests it goes to ' + (CONFIG.listKeeper || CONFIG.host) + '. ' +
+        'Set CONFIG.rsvpEmail to the real address and drop CONFIG.testInbox.'
+      );
+    }
 
     /* one place to change the address; the endpoint follows it */
     function endpoint() {
