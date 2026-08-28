@@ -52,6 +52,10 @@
   var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
   var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+  /* music() fills this in; the gate calls it, since clicking through the
+     gate is the user gesture browsers require before audio may start */
+  var startMusic = null;
+
   /* ═══ toast ═══ */
   var toastEl = $('#toast'), toastTimer;
   function toast(msg) {
@@ -72,6 +76,7 @@
       el.classList.add('is-open');
       document.body.classList.remove('is-locked');
       try { localStorage.setItem(KEY, '1'); } catch (e) {}
+      if (startMusic) startMusic();
       setTimeout(function () { el.remove(); }, 800);
     }
 
@@ -209,19 +214,38 @@
     var btn = $('#music'), label = $('#music-label');
     if (!window.DiscoGroove || !DiscoGroove.supported()) { btn.remove(); return; }
 
-    btn.addEventListener('click', function () {
-      var on = DiscoGroove.toggle();
+    function paint(on) {
       btn.setAttribute('aria-pressed', on ? 'true' : 'false');
       btn.setAttribute('aria-label', on ? 'Stop the music' : "Play 70's music");
       label.textContent = on ? 'Playing' : 'Turn it up';
-    });
+    }
+
+    btn.addEventListener('click', function () { paint(DiscoGroove.toggle()); });
+
+    /* the gate calls this on the way past */
+    startMusic = function () {
+      if (reduced || DiscoGroove.playing()) return;
+      DiscoGroove.start();
+      paint(true);
+    };
+
+    /* someone who has already been here skips the gate, so there is no
+       gesture to ride in on — wait for whatever they touch first */
+    if (!$('#gate')) {
+      var evts = ['pointerdown', 'keydown', 'touchstart'];
+      var once = function (e) {
+        if (e.target && btn.contains(e.target)) return;   // the button speaks for itself
+        evts.forEach(function (n) { document.removeEventListener(n, once); });
+        startMusic();
+      };
+      evts.forEach(function (n) { document.addEventListener(n, once, { passive: true }); });
+    }
 
     /* don't keep the groove running in a tab nobody's looking at */
     document.addEventListener('visibilitychange', function () {
       if (document.hidden && DiscoGroove.playing()) {
         DiscoGroove.stop();
-        btn.setAttribute('aria-pressed', 'false');
-        label.textContent = 'Turn it up';
+        paint(false);
       }
     });
   })();

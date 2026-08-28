@@ -24,10 +24,8 @@ repo to GitHub Pages.
 3. **Countdown** to 4:00 pm on the 24th.
 4. **The Evening.** The run of show as a timeline. The 4:30 surprise is the one
    marker that glows.
-5. **Where.** Wild Rose, the Lucky's check-in note, a Maps link, and a nudge to
-   book a room.
-6. **RSVP.** See below.
-7. **Footer** crediting White Willow Events.
+5. **RSVP.** See below.
+6. **Footer** — the date, venue and the reminder that it's a secret.
 
 ---
 
@@ -139,13 +137,36 @@ chanks, string pad, clap — is built at runtime from oscillators and filtered
 noise over an Am7–Dm7–G7–Cmaj7 vamp at 116 BPM.
 
 It's an original loop, so there's **no licensing question and nothing to
-download**. It never autoplays (browsers block that anyway) — it's behind the
-mirror-ball button in the corner, and it stops when the tab goes to the
-background.
+download**.
 
-If you want actual 70's records instead, that needs a licensed embed (a Spotify
-or Apple Music playlist iframe); dropping MP3s of real songs into the repo would
-not be legal to publish.
+### When it starts
+
+It starts on its own, as soon as someone clicks through the "Shhhh" gate — that
+click is the user gesture browsers require before any audio may play, so it works
+without a warning or a second tap. Anyone who has already been past the gate skips
+it, so for them the groove starts on their first tap or keypress instead.
+
+The mirror-ball button bottom-right always stops it, and it pauses on its own when
+the tab goes to the background.
+
+### Why it isn't actual 70's records
+
+Real songs can't ship here. Putting MP3s of copyrighted recordings in this repo
+and serving them from a public page is republishing them, and no amount of it
+being a private party changes that.
+
+The legal route is a **licensed embed** — a Spotify or Apple Music playlist in an
+iframe. Worth knowing before choosing it:
+
+- It brings its own player UI, so the mirror-ball toggle stops governing it.
+- Spotify only plays full tracks for listeners who are signed in to Spotify;
+  everyone else hears 30-second previews.
+- Embedded players are also blocked from autoplaying on most phones, so the music
+  would go back to needing a deliberate tap.
+
+That's the trade: a real playlist that some guests can't hear properly and nobody
+hears automatically, versus an original groove that always plays. Say the word and
+I'll wire up a playlist embed.
 
 ---
 
@@ -189,10 +210,17 @@ assets/css/styles.css   tokens, disco ball, checkerboard, layout
 assets/js/app.js        CONFIG + gate, countdown, form, .ics, music toggle
 assets/js/rays.js       the canvas mirror-ball light burst
 assets/js/disco.js      the synthesized 70's groove
-assets/fonts/           Playfair Display, Great Vibes, Jost (self-hosted woff2)
+assets/fonts/           EB Garamond for the page; Playfair Display, Great
+                        Vibes and Jost for the invitation card (self-hosted woff2)
 assets/img/             favicon + apple touch icon
 serve.sh                local preview
 ```
+
+The page is set in **EB Garamond**. The invitation card is the deliberate
+exception — it re-declares `--serif`, `--sans` and `--script` on `.card--invite`,
+so everything inside it keeps the typography of the printed original while the
+rest of the site inherits Garamond. Change the card's type by editing those three
+lines, not the root ones.
 
 Design tokens live at the top of `styles.css`. Two rules worth knowing if you edit:
 the cream invitation card overrides `.foil` to a **pink** gradient (silver foil
@@ -208,7 +236,6 @@ attribute.
 
 | Item | Current state | What it needs |
 |---|---|---|
-| **Street address** | Links to a Maps *search* for "Wild Rose Casino & Hotel Jefferson Iowa" | The real street address, pasted into the Where card in `index.html` |
 | **Party end time** | The calendar file guesses **11:00 pm** | The actual end time → `CONFIG.endsAt` in `app.js` |
 | **Photos of Sue** | None on the page | Pictures. A hero shot or a small gallery would lift this more than anything else on this list |
 | **RSVP address** | Pointed at a **test inbox** (`bmaloy19@gmail.com`) and awaiting activation | Click the FormSubmit *"Activate Form"* email, then set `rsvpEmail` to whoever really keeps the list and delete `testInbox` |

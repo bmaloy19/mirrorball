@@ -13,11 +13,11 @@
 <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
 
-<!-- the faces that set the invitation card itself, above the fold -->
+<!-- Garamond sets the page; the rest belong to the invitation card -->
+<link rel="preload" as="font" type="font/woff2" href="assets/fonts/eb-garamond-400-normal.woff2" crossorigin>
 <link rel="preload" as="font" type="font/woff2" href="assets/fonts/great-vibes-400-normal.woff2" crossorigin>
 <link rel="preload" as="font" type="font/woff2" href="assets/fonts/playfair-display-900-normal.woff2" crossorigin>
 <link rel="preload" as="font" type="font/woff2" href="assets/fonts/playfair-display-800-normal.woff2" crossorigin>
-<link rel="preload" as="font" type="font/woff2" href="assets/fonts/jost-300-normal.woff2" crossorigin>
 <link rel="stylesheet" href="assets/css/styles.css">
 </head>
 <body>
@@ -51,7 +51,6 @@
   <a class="topbar__mark" href="#top"><span>Sue is 60</span></a>
   <nav class="topbar__nav" aria-label="Sections">
     <a href="#evening">The Evening</a>
-    <a href="#where">Where</a>
     <a href="#rsvp" class="topbar__cta">RSVP</a>
   </nav>
 </header>
@@ -150,42 +149,6 @@
       </li>
     </ol>
 
-    <div class="band" data-reveal>
-      <div class="band__ball ball ball--sm" aria-hidden="true"><i></i><s></s></div>
-      <div>
-        <p class="band__label">Setting the mood</p>
-        <p class="band__copy">There's a 70's groove playing on this page. Hit the mirror ball in the corner and turn it up.</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- ══ where ══ -->
-  <section class="section section--alt" id="where" aria-labelledby="wh-title">
-    <p class="eyebrow">Getting there</p>
-    <h2 class="section__title section__title--big" id="wh-title">Where</h2>
-
-    <div class="where">
-      <div class="where__card" data-reveal>
-        <h3>Wild Rose Casino &amp; Hotel</h3>
-        <p class="where__loc">Jefferson, Iowa</p>
-        <p class="where__body">
-          Check in <strong>outside Lucky's Sports Grill</strong> — that's where the 4:00 pm
-          gathering happens, and where we all end up again after the concert.
-        </p>
-        <div class="where__actions">
-          <a class="btn btn--ghost" target="_blank" rel="noopener"
-             href="https://www.google.com/maps/search/?api=1&amp;query=Wild+Rose+Casino+%26+Hotel+Jefferson+Iowa">Open in Maps</a>
-        </div>
-      </div>
-
-      <div class="where__card where__card--tip" data-reveal>
-        <h3>Staying over?</h3>
-        <p class="where__body">
-          It's a hotel as well as a casino, and it's a late night with a live band.
-          Book a room early if you'd rather not drive home.
-        </p>
-      </div>
-    </div>
   </section>
 
   <!-- ══ rsvp ══ -->
@@ -277,9 +240,6 @@
 <footer class="foot">
   <div class="checker checker--thin" aria-hidden="true"></div>
   <p class="foot__line">Sue is 60 — let's celebrate.</p>
-  <p class="foot__sub">
-    Planned by <strong>White Willow Events</strong> · Taylor Boesen
-  </p>
   <p class="foot__sub foot__sub--dim">October 24, 2026 · Wild Rose Casino &amp; Hotel · Jefferson, Iowa</p>
 </footer>
 
