@@ -248,11 +248,19 @@ attribute.
 
 ### Consequences of being live
 
-- **The site is public and carries Emily's phone number.** `noindex` plus
-  `robots.txt` keep it out of search results, and the "Shhhh" gate stops an
-  accidental open from spilling the page — but it's a guessable URL on the open
-  internet. Setting a `formEndpoint` and deleting `hostPhone` / `hostPhoneDisplay`
+- **The site is public and carries Emily's phone number.** The "Shhhh" gate stops
+  an accidental open from spilling the page, but it's a guessable URL on the open
+  internet. Setting `rsvpEmail` and deleting `hostPhone` / `hostPhoneDisplay`
   removes the number entirely.
+- **Keeping it out of Google** is handled by the `noindex` meta tag, and
+  `robots.txt` deliberately **allows** crawling so that tag can actually be read.
+  Blocking crawlers would be worse: one that can't fetch the page never sees the
+  noindex, and Google will still list a bare URL it found linked elsewhere.
+- **The repo is a bigger exposure than the site.** Public GitHub repos are
+  indexed by Google, and this one is named `SueIs60`, with a README naming her
+  throughout and linking to the live URL. The description has been made
+  anonymous, but the name and README have not. Renaming the repo would change
+  the Pages URL, so it is worth doing *before* the link goes out, not after.
 - **The repo is public**, which a free GitHub account requires for Pages. Note that
   making it private later would *not* hide the site — Pages sites are public
   regardless of repo visibility.

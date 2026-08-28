@@ -1,2 +1,13 @@
+# Crawling is deliberately ALLOWED here, and that is what keeps the page
+# out of Google.
+#
+# Every page carries <meta name="robots" content="noindex, ...">. A crawler
+# that is blocked from fetching the page never sees that tag — so Google
+# will still list a bare URL it found linked somewhere else, with no way to
+# learn it was meant to stay out. Letting it read the page is what gets the
+# page dropped from the index.
+#
+# See: https://developers.google.com/search/docs/crawling-indexing/block-indexing
+
 User-agent: *
-Disallow: /
+Allow: /

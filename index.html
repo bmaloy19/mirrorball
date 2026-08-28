@@ -5,9 +5,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Sue is 60 — Let's Celebrate</title>
 
-<!-- It's a surprise. Keep it out of search results. -->
-<meta name="robots" content="noindex, nofollow">
-<meta name="description" content="A surprise 60th birthday party for Sue Kirke. October 24, 2026.">
+<!-- It's a surprise. Keep it out of search results entirely: no index,
+     no cached copy, no snippet, no images, and no following the links.
+     robots.txt deliberately allows crawling so this tag can be read. -->
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex, notranslate">
+<meta name="googlebot" content="noindex, nofollow, noarchive, nosnippet, noimageindex">
+<!-- deliberately says nothing: this is what a link preview would show -->
+<meta name="description" content="A private invitation.">
 <meta name="theme-color" content="#150610">
 
 <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
