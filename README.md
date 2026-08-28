@@ -61,6 +61,49 @@ venue.
 
 ---
 
+## The background
+
+The mirror-ball light burst behind the page is drawn in canvas
+([`assets/js/rays.js`](assets/js/rays.js)) — spokes of coloured facet-light
+thrown outward from the ball, drawn additively so they bloom where they cross.
+It's an original rendering, about 4KB, and it loops forever.
+
+This started from a 10-hour 4K "spinning disco ball" video on YouTube. Three
+reasons it isn't that video:
+
+- **Downloading it isn't ours to do.** It's someone else's copyrighted work, and
+  republishing it here would be redistributing it. (10 hours of 4K also blows
+  past Pages' 100MB per-file cap.)
+- **Embedding it is legal but bad here.** iOS routinely refuses inline autoplay,
+  you inherit YouTube branding and end-cards, it streams 4K behind the text, and
+  the page breaks the day that channel takes the video down.
+- **Canvas wins on every practical axis** — no network, no licensing, seamless
+  loop, works on any phone, and the intensity is tunable so the invitation stays
+  readable.
+
+If you ever do want real footage, the legal route is a free-licensed loop from
+Pexels or Pixabay (both allow commercial use), self-hosted as a short seamless
+clip — not a YouTube rip.
+
+### Tuning it
+
+The beams run at full strength over the invitation and fade to 14% as you scroll,
+so the text sections aren't fighting a strobing background. Everything is dialable
+from the `CFG` block at the top of `rays.js` — `intensity`, `spokes`, `segments`,
+`spin`. The origin is measured from the ball element itself each layout, so it
+stays locked to it at every screen size.
+
+From the browser console, live:
+
+```js
+Beams.set('intensity', 1.4)   // brighter
+Beams.set('spokes', 80)       // denser
+Beams.stop()                  // kill it
+```
+
+It renders one still frame and stops if the visitor has "reduce motion" on, and
+pauses entirely when the tab is in the background.
+
 ## The music
 
 `assets/js/disco.js` is a small disco engine, not an audio file. Every sound —
@@ -129,6 +172,7 @@ a concern, the fix is to switch to a `formEndpoint` (above) and delete
 index.html              markup, all content
 assets/css/styles.css   tokens, disco ball, checkerboard, layout
 assets/js/app.js        CONFIG + gate, countdown, form, .ics, music toggle
+assets/js/rays.js       the canvas mirror-ball light burst
 assets/js/disco.js      the synthesized 70's groove
 assets/fonts/           Playfair Display, Great Vibes, Jost (self-hosted woff2)
 assets/img/             favicon + apple touch icon
@@ -152,6 +196,9 @@ attribute.
   `CONFIG` if the room is booked to a specific hour.
 - **No photos of Sue.** A hero photo or a small gallery would lift it a lot —
   needs pictures.
+- **The background is a stylisation, not a copy** of the reference video — same
+  idea (ball plus radiating facet-light), rendered rather than filmed. Say if you
+  want it busier, slower, or in different colours.
 - **The music hasn't been heard on real speakers yet** — it was verified to build
   and run without errors, and the pitches check out, but give it a listen and say
   if you want it funkier, slower, or quieter.

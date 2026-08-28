@@ -37,9 +37,10 @@
 
 <!-- ══ ambient disco lighting ══ -->
 <div class="stage" aria-hidden="true">
-  <div class="stage__rays"></div>
+  <canvas class="stage__beams" id="beams"></canvas>
   <div class="stage__glow stage__glow--a"></div>
   <div class="stage__glow stage__glow--b"></div>
+  <div class="stage__scrim"></div>
   <div class="stage__grain"></div>
 </div>
 
@@ -284,6 +285,7 @@
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
+<script src="assets/js/rays.js"></script>
 <script src="assets/js/disco.js"></script>
 <script src="assets/js/app.js"></script>
 </body>
