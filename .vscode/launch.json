@@ -1,0 +1,25 @@
+{
+  // Press F5. `preLaunchTask` starts the local server first (see tasks.json),
+  // then Chrome opens on it. The scaffolded default pointed at :8080 and
+  // started nothing, so it always opened on a refused connection.
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "chrome",
+      "request": "launch",
+      "name": "Sue is 60",
+      "url": "http://localhost:8000",
+      "webRoot": "${workspaceFolder}",
+      "preLaunchTask": "serve"
+    },
+    {
+      // Same thing in Edge, for when Chrome isn't the one you want.
+      "type": "msedge",
+      "request": "launch",
+      "name": "Sue is 60 (Edge)",
+      "url": "http://localhost:8000",
+      "webRoot": "${workspaceFolder}",
+      "preLaunchTask": "serve"
+    }
+  ]
+}

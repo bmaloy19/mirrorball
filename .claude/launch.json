@@ -4,7 +4,7 @@
     {
       "name": "sue60",
       "runtimeExecutable": "python3",
-      "runtimeArgs": ["-m", "http.server", "8123"],
+      "runtimeArgs": ["tools/preview.py", "8123"],
       "port": 8123
     }
   ]

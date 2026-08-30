@@ -7,8 +7,8 @@ A private one-page invitation site for a surprise birthday party.
 > itself is not — the page carries `noindex`. The real details live in the
 > `CONFIG` block in [`assets/js/app.js`](assets/js/app.js) and in `index.html`.
 
-An RSVP form and a 70's disco soundtrack. Static — no backend, no build step,
-deploys straight from this repo to GitHub Pages.
+The invitation arrives inside an envelope you open. Static — no backend, no
+build step, deploys straight from this repo to GitHub Pages.
 
 **Live:** https://bmaloy19.github.io/mirrorball/
 
@@ -20,13 +20,15 @@ deploys straight from this repo to GitHub Pages.
 
 ## The page, top to bottom
 
-1. **The secret gate.** A full-screen "Shhhh…" splash before anything else, so
-   nobody opens the link beside the guest of honour and gets the whole thing on
-   screen. Tapping
-   *I can keep a secret* remembers the choice (localStorage), so it only appears
-   once per browser. It sets the tone; it isn't security.
-2. **The invitation.** A near-copy of the printed card — checkerboard frame,
-   script headline, the big 60 — under a hanging mirror ball with light rays.
+1. **The envelope.** A stamped, sealed envelope covering the whole screen —
+   nothing else is reachable until someone deliberately opens it. Tap to turn it
+   over, tap the wax seal, and the invitation rises out and settles into the
+   page. It also does the old "Shhhh" gate's job: nobody opens the link beside
+   the guest of honour and gets the whole thing on screen. See
+   [The envelope](#the-envelope).
+2. **The invitation.** The printed card itself, as artwork — see
+   [The invitation](#the-invitation). It is the same element that came out of
+   the envelope, not a second copy.
 3. **Countdown** to 4:00 pm on the 24th.
 4. **The Evening.** The run of show as a timeline. The 4:30 surprise is the one
    marker that glows.
@@ -93,87 +95,88 @@ answer is never silently dropped.
 
 ---
 
-## The background
+## The invitation
 
-The mirror-ball light burst behind the page is drawn in canvas
-([`assets/js/rays.js`](assets/js/rays.js)) — spokes of coloured facet-light
-thrown outward from the ball, drawn additively so they bloom where they cross.
-It's an original rendering, about 4KB, and it loops forever.
+`assets/img/invitation.png` **is** the printed invitation, not a rendering of
+one. The first version rebuilt it in CSS and guessed at the type; the script,
+the 60 and SUE KIRKE are set in faces we don't have, so it was never going to be
+exact and the client wanted exact.
 
-This started from a 10-hour 4K "spinning disco ball" video on YouTube. Three
-reasons it isn't that video:
+Two renditions, picked by `srcset`: 1200×1680 (126 KB) and 800×1120 (73 KB),
+both resampled from the 1500×2100 original and reduced to a 128-colour palette.
+It is nearly all flat colour, so that is visually lossless and about a third
+off the file size.
 
-- **Downloading it isn't ours to do.** It's someone else's copyrighted work, and
-  republishing it here would be redistributing it. (10 hours of 4K also blows
-  past Pages' 100MB per-file cap.)
-- **Embedding it is legal but bad here.** iOS routinely refuses inline autoplay,
-  you inherit YouTube branding and end-cards, it streams 4K behind the text, and
-  the page breaks the day that channel takes the video down.
-- **Canvas wins on every practical axis** — no network, no licensing, seamless
-  loop, works on any phone, and the intensity is tunable so the invitation stays
-  readable.
+**The words are still in the page.** Artwork carries no text, so `.invite__text`
+inside the card repeats them — hidden the way `.sr` is, read out by screen
+readers, and the `<h1>` the document needs. If the image ever fails to load,
+`app.js` un-hides it and the hero shows a plain framed invitation instead of an
+empty box.
 
-If you ever do want real footage, the legal route is a free-licensed loop from
-Pexels or Pixabay (both allow commercial use), self-hosted as a short seamless
-clip — not a YouTube rip.
+The page's palette is **sampled from this file** rather than eyeballed:
+`--pink: #da3c8b` and `--pink-soft: #efc7ce` are literally the two colours of
+its checkerboard. Everything else is built from those, so the site and the card
+are the same pink instead of two that nearly match.
 
-### Tuning it
+**To swap in a new version of the invitation**, drop the replacement in and
+regenerate both sizes; nothing else needs to change unless its proportions do
+(the card is laid out at the image's aspect ratio, via the `width`/`height`
+attributes).
 
-The beams run at full strength over the invitation and fade to 14% as you scroll,
-so the text sections aren't fighting a strobing background. Everything is dialable
-from the `CFG` block at the top of `rays.js` — `intensity`, `spokes`, `segments`,
-`spin`. The origin is measured from the ball element itself each layout, so it
-stays locked to it at every screen size.
+### The fonts
 
-From the browser console, live:
+Now moot for the card, which is why the type left over is so short: **EB
+Garamond** sets the whole page, **Great Vibes** the envelope's script, and
+**Playfair Display** the two digits on the wax seal. Jost and the other Playfair
+weights went with the CSS card.
 
-```js
-Beams.set('intensity', 1.4)   // brighter
-Beams.set('spokes', 80)       // denser
-Beams.stop()                  // kill it
-```
+---
 
-It renders one still frame and stops if the visitor has "reduce motion" on, and
-pauses entirely when the tab is in the background.
+## The envelope
 
-## The music
+The opening sequence lives in [`assets/js/envelope.js`](assets/js/envelope.js)
+and runs on [GSAP](https://gsap.com) (vendored at `assets/js/gsap.min.js`, no
+build step, no CDN). It is the same three-beat sequence as the McKenna save-the-
+date, re-dressed in this suite's pink:
 
-`assets/js/disco.js` is a small disco engine, not an audio file. Every sound —
-four-on-the-floor kick, the open hat on the "and", the octave bassline, clav
-chanks, string pad, clap — is built at runtime from oscillators and filtered
-noise over an Am7–Dm7–G7–Cmaj7 vamp at 116 BPM.
+1. **The stamped front.** Return address, two perforated stamps — a big 60 and
+   the card's checkerboard — and a Jefferson postmark. Tap and it turns over.
+2. **The back.** Tap the wax seal: it snaps off, the flap swings open to show a
+   checkerboard lining, and the card rises out through the mouth *lying on its
+   side*, the way a portrait card really sits in a landscape envelope.
+3. **The hand-off.** The card stands up, flies to its place in the hero, and the
+   page underneath unlocks.
 
-It's an original loop, so there's **no licensing question and nothing to
-download**.
+**There is only ever one invitation.** The card starts in `#card-home` in the
+hero, is moved into the envelope on load, and is handed back at the end — so the
+final flight lands on the real element rather than dissolving a copy into it.
+`#card-home` holds the card's height while it is away, which is what lets the
+landing box be measured before the card arrives in it.
 
-### When it starts
+Both the envelope and the card at rest are laid out at the same `--card-w`
+(top of `styles.css`), so the hand-off is a pure transform with nothing to
+reflow. The envelope is derived from it — change `--card-w` and both follow.
 
-It starts on its own, as soon as someone clicks through the "Shhhh" gate — that
-click is the user gesture browsers require before any audio may play, so it works
-without a warning or a second tap. Anyone who has already been past the gate skips
-it, so for them the groove starts on their first tap or keypress instead.
+### If anything goes wrong
 
-The mirror-ball button bottom-right always stops it, and it pauses on its own when
-the tab goes to the background.
+The envelope covers the page from the first paint, so the surprise never flashes
+up before it lands. That makes it the one piece that could strand a guest, so
+there are two ways out:
 
-### Why it isn't actual 70's records
+- **No JavaScript at all** — the overlay is `display:none` until an inline
+  `<head>` script adds `.js`, so it never appears. The plain page does.
+- **JavaScript, but `envelope.js` didn't run** (404, blocked, an old browser
+  that threw) — `envelope.js` sets `.envelope-ready` as soon as it wires itself
+  up, and `app.js` loads immediately after and checks for it. Missing means the
+  overlay comes straight off, with a console warning.
 
-Real songs can't ship here. Putting MP3s of copyrighted recordings in this repo
-and serving them from a public page is republishing them, and no amount of it
-being a private party changes that.
+Nobody ends up on a screen they can't open, which matters because the RSVP is
+behind it.
 
-The legal route is a **licensed embed** — a Spotify or Apple Music playlist in an
-iframe. Worth knowing before choosing it:
+### Reduced motion
 
-- It brings its own player UI, so the mirror-ball toggle stops governing it.
-- Spotify only plays full tracks for listeners who are signed in to Spotify;
-  everyone else hears 30-second previews.
-- Embedded players are also blocked from autoplaying on most phones, so the music
-  would go back to needing a deliberate tap.
-
-That's the trade: a real playlist that some guests can't hear properly and nobody
-hears automatically, versus an original groove that always plays. Say the word and
-I'll wire up a playlist embed.
+With "reduce motion" on, both taps still work but land instantly — no turn, no
+flap, no flight.
 
 ---
 
@@ -185,6 +188,10 @@ I'll wire up a playlist embed.
 
 Serves the folder and opens http://localhost:8000. `python3` ships with macOS, so
 there's nothing to install. Pass a port if 8000 is taken: `./serve.sh 9000`.
+
+It sends `Cache-Control: no-store` ([`tools/preview.py`](tools/preview.py)).
+Plain `python3 -m http.server` doesn't, and a browser holding a stale
+`styles.css` makes every edit look like it did nothing.
 
 Go through the server rather than double-clicking `index.html` — over `file://`
 the browser blocks the fonts.
@@ -213,27 +220,36 @@ The site is a public URL and carries a phone number — see
 
 ```
 index.html              markup, all content
-assets/css/styles.css   tokens, disco ball, checkerboard, layout
-assets/js/app.js        CONFIG + gate, countdown, form, .ics, music toggle
-assets/js/rays.js       the canvas mirror-ball light burst
-assets/js/disco.js      the synthesized 70's groove
-assets/fonts/           EB Garamond for the page; Playfair Display, Great
-                        Vibes and Jost for the invitation card (self-hosted woff2)
-assets/img/             favicon + apple touch icon
+assets/css/styles.css   tokens, envelope, checkerboard, layout
+assets/js/envelope.js   the three-beat envelope opening
+assets/js/gsap.min.js   GSAP 3.13, vendored — drives the envelope
+assets/js/app.js        CONFIG + countdown, form, .ics, reveals
+assets/fonts/           EB Garamond (page), Great Vibes (envelope script),
+                        Playfair Display 900 (the wax seal) — self-hosted woff2
+assets/img/             the invitation artwork, favicon + apple touch icon
+tools/preview.py        the local server, with caching switched off
 serve.sh                local preview
 ```
 
-The page is set in **EB Garamond**. The invitation card is the deliberate
-exception — it re-declares `--serif`, `--sans` and `--script` on `.card--invite`,
-so everything inside it keeps the typography of the printed original while the
-rest of the site inherits Garamond. Change the card's type by editing those three
-lines, not the root ones.
+The page is set in **EB Garamond** throughout. The invitation used to be the
+exception, re-declaring three faces on `.card--invite`; it is artwork now, so
+that exception is gone — see [The fonts](#the-fonts).
 
-Design tokens live at the top of `styles.css`. Two rules worth knowing if you edit:
-the cream invitation card overrides `.foil` to a **pink** gradient (silver foil
-disappears on white), and `[hidden]{display:none !important}` is load-bearing —
-several components are `display:grid`, which would otherwise beat the `hidden`
-attribute.
+Design tokens live at the top of `styles.css`. Four worth knowing if you edit:
+
+- **`--card-w` sizes two things.** The card at rest in the hero *and* the card
+  inside the envelope, and the envelope is derived from it. That shared width is
+  what makes the hand-off a pure transform — don't set either one separately.
+- **`--pink` and `--pink-soft` are sampled from the artwork.** Don't nudge them
+  by eye — they are what keeps the page and the card the same pink. `--pink-ink`
+  exists because white on `--pink` is 4.2:1, a shade under AA for the buttons'
+  small caps; solid fills carrying white text use it instead.
+- **`.foil` is pink, everywhere.** It used to be silver on the dark page, with
+  the cream card overriding it. On blush, silver disappears, so the pink
+  gradient is now the only one — and it only ever runs *darker* than `--pink`,
+  so the sweep can't dip below contrast mid-animation.
+- **`[hidden]{display:none !important}` is load-bearing.** Several components are
+  `display:grid`, which would otherwise beat the `hidden` attribute.
 
 ---
 
@@ -250,14 +266,16 @@ attribute.
 
 ### Waiting on your eyes
 
-- ~~The music~~ — **approved, no changes wanted.**
-- ~~How the background reads in motion~~ — **approved.**
+- **The envelope opening.** New this round — worth watching on a phone as well
+  as a laptop.
+- **How the printed card sits on the page** now that it is the real artwork and
+  the palette has been pulled from it.
 
 ### Consequences of being live
 
-- **The site is public and carries a personal phone number.** The "Shhhh" gate stops
-  an accidental open from spilling the page, but it's a guessable URL on the open
-  internet. Setting `rsvpEmail` and deleting `hostPhone` / `hostPhoneDisplay`
+- **The site is public and carries a personal phone number.** The envelope stops
+  an accidental open from spilling the page — nothing shows until someone works
+  through two taps — but it's a guessable URL on the open internet. Setting `rsvpEmail` and deleting `hostPhone` / `hostPhoneDisplay`
   removes the number entirely.
 - **Keeping it out of Google** is handled by the `noindex` meta tag, and
   `robots.txt` deliberately **allows** crawling so that tag can actually be read.
@@ -267,15 +285,21 @@ attribute.
   indexed by Google in a way the site itself is not. The repo name, description
   and this README have all been made anonymous for that reason — keep them that
   way. Anything identifying belongs in the page or in `CONFIG`, not here.
+- **The repo is still called `mirrorball`,** which no longer describes anything on
+  the page. Renaming it changes the Pages URL, so any link already sent out would
+  break — worth doing only before the invitations go out, not after.
 - **The repo is public**, which a free GitHub account requires for Pages. Note that
   making it private later would *not* hide the site — Pages sites are public
   regardless of repo visibility.
 - **To take it down fast:** `gh api -X DELETE repos/bmaloy19/mirrorball/pages`
 
-### Deliberately not done
+### Removed in the second round, at the client's request
 
-- **Real 70's records.** The soundtrack is synthesized precisely so nothing
-  copyrighted ships here. Actual songs would need a licensed Spotify or Apple Music
-  embed — see [The music](#the-music).
-- **The reference video as a background.** Rebuilt in canvas rather than
-  downloaded, for the reasons in [The background](#the-background).
+- **The music.** `disco.js` synthesized a 70's groove from oscillators at
+  runtime. Gone, along with the mirror-ball toggle that governed it.
+- **The mirror ball** and its canvas light burst (`ball.js`, `rays.js`). The
+  page was dark to make them read; it is light pink now, which is what made the
+  retheme a rewrite of the palette rather than a tweak.
+
+Both are in the history if they are ever wanted back:
+`git show 231f18b:assets/js/disco.js`.

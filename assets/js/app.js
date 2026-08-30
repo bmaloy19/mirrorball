@@ -52,9 +52,37 @@
   var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
   var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  /* music() fills this in; the gate calls it, since clicking through the
-     gate is the user gesture browsers require before audio may start */
-  var startMusic = null;
+  /* ═══ the envelope's dead man's switch ═══
+     index.html puts the envelope over the page from the first paint, so the
+     surprise never flashes up before it. envelope.js sets .envelope-ready as
+     soon as it has wired itself up; this file loads immediately after it, so
+     if the flag is missing by now that script bailed or never arrived. Clear
+     the overlay rather than leave a guest on a screen they cannot open. */
+  (function failsafe() {
+    var cls = document.documentElement.classList;
+    if (!$('#opener') || cls.contains('envelope-ready')) return;
+    console.warn('[envelope] envelope.js did not initialise — showing the page directly.');
+    $('#opener').classList.add('is-gone');
+    document.body.classList.remove('is-locked');
+    cls.add('is-opened');
+  })();
+
+  /* ═══ the invitation is artwork ═══
+     Which means one failed request and the hero is an empty frame. The card
+     carries the same words in .invite__text, hidden; if the image doesn't
+     arrive, show them instead. */
+  (function inviteFallback() {
+    var img = $('#invite-img');
+    if (!img) return;
+    function fail() {
+      var card = img.closest('.card--invite');
+      if (card) card.classList.add('is-missing');
+      img.remove();
+    }
+    img.addEventListener('error', fail);
+    // it may already have failed by the time this file runs
+    if (img.complete && img.naturalWidth === 0) fail();
+  })();
 
   /* ═══ toast ═══ */
   var toastEl = $('#toast'), toastTimer;
@@ -64,27 +92,6 @@
     clearTimeout(toastTimer);
     toastTimer = setTimeout(function () { toastEl.classList.remove('is-up'); }, 2600);
   }
-
-  /* ═══ the secret gate ═══ */
-  (function gate() {
-    var el = $('#gate'), btn = $('#gate-btn');
-    var KEY = 'sue60-secret-kept';
-    var known;
-    try { known = localStorage.getItem(KEY) === '1'; } catch (e) { known = false; }
-
-    function open() {
-      el.classList.add('is-open');
-      document.body.classList.remove('is-locked');
-      try { localStorage.setItem(KEY, '1'); } catch (e) {}
-      if (startMusic) startMusic();
-      setTimeout(function () { el.remove(); }, 800);
-    }
-
-    if (known) { el.remove(); return; }
-    document.body.classList.add('is-locked');
-    btn.addEventListener('click', open);
-    setTimeout(function () { btn.focus(); }, 400);
-  })();
 
   /* ═══ sticky top bar ═══ */
   (function topbar() {
@@ -103,14 +110,25 @@
       items.forEach(function (n) { n.classList.add('is-in'); });
       return;
     }
-    var io = new IntersectionObserver(function (entries) {
-      entries.forEach(function (e) {
-        if (!e.isIntersecting) return;
-        e.target.classList.add('is-in');
-        io.unobserve(e.target);
-      });
-    }, { rootMargin: '0px 0px -12% 0px', threshold: 0.12 });
-    items.forEach(function (n) { io.observe(n); });
+
+    function watch() {
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+          if (!e.isIntersecting) return;
+          e.target.classList.add('is-in');
+          io.unobserve(e.target);
+        });
+      }, { rootMargin: '0px 0px -12% 0px', threshold: 0.12 });
+      items.forEach(function (n) { io.observe(n); });
+    }
+
+    /* The envelope covers the page while it is being opened. Anything up near
+       the fold would otherwise be "seen" and revealed behind the overlay, so
+       it would already be faded in by the time anyone could look at it. */
+    var cls = document.documentElement.classList;
+    var waiting = cls.contains('envelope-ready') && !cls.contains('is-opened');
+    if (waiting) window.addEventListener('invite:open', watch, { once: true });
+    else watch();
   })();
 
   /* ═══ countdown ═══ */
@@ -209,53 +227,14 @@
     });
   })();
 
-  /* ═══ music ═══ */
-  (function music() {
-    var btn = $('#music'), label = $('#music-label');
-    if (!window.DiscoGroove || !DiscoGroove.supported()) { btn.remove(); return; }
-
-    function paint(on) {
-      btn.setAttribute('aria-pressed', on ? 'true' : 'false');
-      btn.setAttribute('aria-label', on ? 'Stop the music' : "Play 70's music");
-      label.textContent = on ? 'Playing' : 'Turn it up';
-    }
-
-    btn.addEventListener('click', function () { paint(DiscoGroove.toggle()); });
-
-    /* the gate calls this on the way past */
-    startMusic = function () {
-      if (reduced || DiscoGroove.playing()) return;
-      DiscoGroove.start();
-      paint(true);
-    };
-
-    /* someone who has already been here skips the gate, so there is no
-       gesture to ride in on — wait for whatever they touch first */
-    if (!$('#gate')) {
-      var evts = ['pointerdown', 'keydown', 'touchstart'];
-      var once = function (e) {
-        if (e.target && btn.contains(e.target)) return;   // the button speaks for itself
-        evts.forEach(function (n) { document.removeEventListener(n, once); });
-        startMusic();
-      };
-      evts.forEach(function (n) { document.addEventListener(n, once, { passive: true }); });
-    }
-
-    /* don't keep the groove running in a tab nobody's looking at */
-    document.addEventListener('visibilitychange', function () {
-      if (document.hidden && DiscoGroove.playing()) {
-        DiscoGroove.stop();
-        paint(false);
-      }
-    });
-  })();
-
   /* ═══ confetti ═══ */
   function confetti() {
     if (reduced) return;
     var wrap = document.createElement('div');
     wrap.className = 'confetti';
-    var colors = ['#e22a8b', '#ff3fa4', '#f6c8dd', '#d9dce3', '#ffffff'];
+    /* pinks and white, on a pink ground — no silver, which used to read
+       against the dark page and now disappears */
+    var colors = ['#e22a8b', '#ff3fa4', '#a8115f', '#f6c8dd', '#ffffff'];
     for (var i = 0; i < 70; i++) {
       var bit = document.createElement('i');
       bit.style.left = (Math.random() * 100) + '%';
