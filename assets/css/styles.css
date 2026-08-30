@@ -1,7 +1,9 @@
 /* ═══════════════════════════════════════════════════════════
    Sue is 60 — Let's Celebrate
    Palette + type pulled from the printed invitation:
-   hot pink, soft pink checkerboard, silver foil, disco ball.
+   hot pink on blush, checkerboard frame, pink foil.
+   The invitation arrives inside an envelope; everything below
+   the fold is the page it opens onto.
    ═══════════════════════════════════════════════════════════ */
 
 /* ── fonts ─────────────────────────────────────────────── */
@@ -10,31 +12,34 @@
 @font-face{font-family:'EB Garamond';src:url(../fonts/eb-garamond-700-normal.woff2)format('woff2');font-weight:700;font-display:swap}
 @font-face{font-family:'EB Garamond';src:url(../fonts/eb-garamond-400-italic.woff2)format('woff2');font-weight:400;font-style:italic;font-display:swap}
 @font-face{font-family:'Great Vibes';src:url(../fonts/great-vibes-400-normal.woff2)format('woff2');font-weight:400;font-display:swap}
-@font-face{font-family:'Playfair Display';src:url(../fonts/playfair-display-700-normal.woff2)format('woff2');font-weight:700;font-display:swap}
-@font-face{font-family:'Playfair Display';src:url(../fonts/playfair-display-800-normal.woff2)format('woff2');font-weight:800;font-display:swap}
+/* the card is the printed artwork now, so the only survivor of its type is
+   Playfair, setting the two digits on the wax seal */
 @font-face{font-family:'Playfair Display';src:url(../fonts/playfair-display-900-normal.woff2)format('woff2');font-weight:900;font-display:swap}
-@font-face{font-family:'Jost';src:url(../fonts/jost-400-normal.woff2)format('woff2');font-weight:400;font-display:swap}
-@font-face{font-family:'Jost';src:url(../fonts/jost-500-normal.woff2)format('woff2');font-weight:500;font-display:swap}
 
 /* ── tokens ────────────────────────────────────────────── */
 :root{
-  --pink:      #e22a8b;
-  --pink-hot:  #ff3fa4;
-  --pink-deep: #a8115f;
-  --pink-soft: #f6c8dd;
-  --pink-mist: rgba(226,42,139,.16);
+  /* --pink and --pink-soft are sampled straight out of the printed card
+     (assets/img/invitation.png): its checkerboard is exactly these two. The
+     rest of the palette is built from them, so the page and the artwork are
+     the same pink rather than two that nearly match. */
+  --pink:      #da3c8b;   /* the card's hot pink */
+  --pink-soft: #efc7ce;   /* the light square of its checkerboard */
+  --pink-hot:  #f0509d;   /* a lift, for hover states */
+  --pink-deep: #a01d62;   /* small type: 5.9:1 on the page ground */
+  /* white on --pink is 4.2:1, just under AA for the buttons' small caps, so
+     solid fills that carry white text use this a shade deeper instead */
+  --pink-ink:  #cc2f7e;
+  --pink-line: rgba(218,60,139,.3);
 
-  --silver-hi: #ffffff;
-  --silver:    #d9dce3;
-  --silver-lo: #8e94a3;
+  /* the page ground: tints of the card's own light pink */
+  --blush:   #f8e2e6;
+  --blush-2: #efc7ce;
+  --blush-3: #fdf3f5;
+  --paper:   #fffbfc;   /* envelope stock */
 
-  --ink:   #150610;
-  --ink-2: #21091a;
-  --ink-3: #2f0f26;
-  --cream: #fff7fb;
-
-  --text:     #f4e6ee;
-  --text-dim: #c3a8b7;
+  --ink:      #4a1128;  /* deep plum body copy */
+  --ink-soft: #8a5364;
+  --ink-fine: #87596a;  /* hints and fine print — dark enough to pass on blush */
 
   /* the site is set in Garamond; the invitation card re-declares these
      three below so it keeps the typography of the printed original */
@@ -44,19 +49,34 @@
 
   --wrap: 1080px;
   --ease: cubic-bezier(.22,.68,.24,1);
+  --ease-out: cubic-bezier(.16,.84,.34,1);
+
+  /* The card is laid out at this width both inside the envelope and at
+     rest in the hero, so the hand-off between them is a pure transform
+     with nothing to reflow. Change it here and both follow. */
+  --card-w: min(90vw, 480px);
+  --env-w:  min(93vw, calc(var(--card-w) * 1.26));
+  --env-h:  calc(var(--env-w) * .68);
 }
 
 /* ── base ──────────────────────────────────────────────── */
 *,*::before,*::after{box-sizing:border-box}
-html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;background-color:var(--blush)}
 body{
   margin:0;
-  background:var(--ink);
-  color:var(--text);
+  color:var(--ink);
   font:400 18px/1.62 var(--sans);
   letter-spacing:.012em;
   overflow-x:hidden;
-  min-height:100vh;
+  min-height:100svh;
+  /* Safari reads the body's background-COLOR (gradients are skipped) to tint
+     the iOS toolbars, so the solid base has to be there under the wash */
+  background-color:var(--blush);
+  background-image:
+    radial-gradient(130% 80% at 50% 0%, var(--blush-3) 0%, var(--blush) 44%, var(--blush-2) 100%);
+  background-attachment:fixed;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
 }
 body.is-locked{overflow:hidden}
 img{max-width:100%;display:block}
@@ -65,12 +85,17 @@ img{max-width:100%;display:block}
 h1,h2,h3{margin:0;font-weight:700;line-height:1.06}
 p{margin:0}
 a{color:inherit}
-:focus-visible{outline:2px solid var(--pink-hot);outline-offset:3px;border-radius:3px}
+:focus-visible{outline:2px solid var(--pink);outline-offset:3px;border-radius:3px}
 .sr, .cd__sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 
-/* ═══ silver foil type ═══ */
+/* ═══ pink foil type ═══
+   Silver foil reads as printing on a dark ground and vanishes on blush, so the
+   whole page uses the card's pink now. The gradient only ever runs darker than
+   --pink, never lighter, so the sweep can't dip below contrast mid-animation. */
 .foil{
-  background:linear-gradient(100deg,#fff 0%,#cfd4de 14%,#8b91a0 27%,#fff 41%,#b6bcc9 55%,#f4f6fa 68%,#969cab 82%,#fff 100%);
+  background:linear-gradient(100deg,
+    var(--pink) 0%, var(--pink-deep) 24%, var(--pink) 46%,
+    var(--pink-deep) 70%, var(--pink) 100%);
   background-size:250% 100%;
   -webkit-background-clip:text;background-clip:text;
   color:transparent;
@@ -78,94 +103,256 @@ a{color:inherit}
 }
 @keyframes foil{to{background-position:-250% 0}}
 
-/* ═══ disco ball ═══ */
-.ball{
-  --d:132px;
-  position:relative;flex:none;
-  width:var(--d);height:var(--d);border-radius:50%;
-  background:#6c7180;
-  overflow:hidden;isolation:isolate;
-  box-shadow:
-    inset -13px -15px 32px rgba(0,0,0,.8),
-    inset 9px 9px 24px rgba(255,255,255,.2),
-    0 0 40px rgba(226,42,139,.4),
-    0 0 92px rgba(226,42,139,.16);
-}
-.ball--sm{--d:58px}
-.ball--xs{--d:24px}
 
-/* facet grid — scrolling sideways reads as rotation */
-.ball i{
-  position:absolute;inset:-12% -30%;
-  background-image:
-    repeating-linear-gradient(90deg,rgba(0,0,0,.55) 0 1.5px,transparent 1.5px 7.5%),
-    repeating-linear-gradient(0deg,rgba(0,0,0,.45) 0 1.5px,transparent 1.5px 10%),
-    repeating-linear-gradient(90deg,rgba(255,255,255,.16) 0 3.4%,rgba(255,60,160,.13) 3.4% 7.5%);
-  animation:ballspin 8s linear infinite;
-}
-/* sphere shading + specular */
-.ball s{
-  position:absolute;inset:0;text-decoration:none;
-  background:
-    radial-gradient(circle at 31% 26%,rgba(255,255,255,.92),rgba(255,255,255,0) 30%),
-    radial-gradient(circle at 24% 20%,rgba(255,255,255,.6),rgba(255,255,255,0) 12%),
-    radial-gradient(circle at 74% 78%,rgba(226,42,139,.5),rgba(0,0,0,0) 48%),
-    radial-gradient(circle at 50% 50%,rgba(0,0,0,0) 52%,rgba(0,0,0,.6) 100%);
-}
-@keyframes ballspin{to{background-position:-100% 0,0 0,-100% 0}}
+/* ═══════════════════════════════════════════════════════════
+   THE ENVELOPE
+   Three beats: the stamped front turns over, the seal breaks and
+   the flap opens, the card rises out and settles into the page.
+   ═══════════════════════════════════════════════════════════ */
 
-/* once ball.js takes over, the CSS facets and shading are just the
-   fallback underneath — the canvas draws the whole sphere */
-.ball__canvas{position:absolute;inset:0;width:100%;height:100%;border-radius:50%;display:block}
-.ball.is-rendered i,.ball.is-rendered s{display:none}
-.ball.is-rendered{background:#191320}
-
-.hero__ball{display:flex;flex-direction:column;align-items:center;margin-bottom:clamp(20px,4vw,34px)}
-.ball__cord{width:2px;height:clamp(26px,6vw,58px);
-  background:linear-gradient(var(--silver-lo),rgba(142,148,163,0));order:-1}
-.hero__ball .ball{animation:sway 7s ease-in-out infinite}
-@keyframes sway{0%,100%{transform:rotate(-3deg)}50%{transform:rotate(3deg)}}
-
-/* ═══ ambient stage lighting ═══ */
-.stage{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
-.stage__beams{
-  position:absolute;inset:0;width:100%;height:100%;display:block;
-  background:var(--ink);transition:opacity .4s linear;
-}
-/* keeps the beams off the text without flattening them at the edges */
-.stage__scrim{
-  position:absolute;inset:0;
-  background:
-    radial-gradient(ellipse 66% 50% at 50% 64%,
-      rgba(21,6,16,.86) 0%,rgba(21,6,16,.58) 52%,rgba(21,6,16,0) 100%),
-    linear-gradient(rgba(21,6,16,0) 0%,rgba(21,6,16,.30) 30%,
-      rgba(21,6,16,.55) 56%,rgba(21,6,16,.80) 100%);
-}
-.stage__glow{position:absolute;border-radius:50%;filter:blur(90px);opacity:.5}
-.stage__glow--a{width:52vmax;height:52vmax;left:-16vmax;top:34vh;background:rgba(226,42,139,.4);animation:drift 26s ease-in-out infinite}
-.stage__glow--b{width:44vmax;height:44vmax;right:-14vmax;top:104vh;background:rgba(120,40,180,.34);animation:drift 34s ease-in-out infinite reverse}
-.stage__grain{position:absolute;inset:0;opacity:.05;
-  background-image:radial-gradient(rgba(255,255,255,.9) .5px,transparent .5px);
-  background-size:3px 3px}
-@keyframes drift{0%,100%{transform:translate(0,0)}50%{transform:translate(6vmax,-7vmax)}}
-
-/* ═══ the secret gate ═══ */
-.gate{
+/* Driven entirely by JS, so it only paints for visitors who have it —
+   otherwise someone without it would be staring at a screen they can't open. */
+.opener{display:none}
+.js .opener{
+  display:flex;
   position:fixed;inset:0;z-index:100;
-  display:grid;place-items:center;padding:24px;
-  background:radial-gradient(ellipse at 50% 34%,var(--ink-3),var(--ink) 68%);
-  transition:opacity .7s var(--ease),visibility .7s;
+  padding:max(20px,env(safe-area-inset-top)) 16px max(20px,env(safe-area-inset-bottom));
+  background-color:var(--blush);
+  background-image:
+    radial-gradient(120% 78% at 50% 12%, var(--blush-3) 0%, var(--blush) 48%, var(--blush-2) 100%);
 }
-.gate.is-open{opacity:0;visibility:hidden}
-.gate__inner{max-width:min(34rem,100%);text-align:center;display:grid;justify-items:center;gap:16px;
-  animation:rise .9s var(--ease) both}
-.gate__eyebrow{font-size:.74rem;letter-spacing:.32em;text-transform:uppercase;color:var(--pink-hot);margin-top:8px}
-.gate__title{font-family:var(--serif);font-size:clamp(3.2rem,13vw,5.4rem);color:var(--silver-hi);letter-spacing:.02em}
-.gate__dots{color:var(--pink-hot)}
-.gate__copy{color:var(--text-dim);max-width:min(30rem,100%);font-size:1.06rem}
-.gate__copy strong{color:var(--silver-hi);font-weight:400}
-.gate__fine{font-size:.82rem;color:#8d7382;max-width:min(26rem,100%);margin-top:2px}
-@keyframes rise{from{opacity:0;transform:translateY(20px)}}
+.opener > *{margin:auto}
+.opener.is-gone{display:none}
+
+.scene{
+  display:flex;flex-direction:column;align-items:center;
+  perspective:1800px;              /* drives the turn-over */
+}
+
+/* ── the turn-over (two faces) ── */
+.flipper{
+  position:relative;
+  width:var(--env-w);height:var(--env-h);
+  transform-style:preserve-3d;
+  cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+}
+.face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden}
+.face--back{transform:rotateY(180deg)}
+
+/* Backface culling alone is not enough: both faces hold composited children,
+   and once a face is promoted to its own layer WebKit stops culling it — the
+   stamped front stays painted over the back for the whole turn. So the swap is
+   written out: envelope.js toggles .show-back as rotateY crosses 90deg, where
+   the envelope is edge-on and the change can't be seen. Hidden two ways
+   because a promoted layer may honour only one of them. */
+.flipper:not(.show-back) .face--back{visibility:hidden;opacity:0}
+.flipper.show-back        .face--front{visibility:hidden;opacity:0}
+
+/* once the turn is done JS flattens back to plain 2D, so the flap gets its own
+   perspective and ordinary z-index stacking */
+.flipper.is-flat{transform-style:flat}
+.flipper.is-flat .face--back{transform:none}
+.flipper.is-flat .face{backface-visibility:visible}
+
+/* cast shadow under the whole envelope */
+.flipper::after{
+  content:'';position:absolute;left:5%;right:5%;bottom:-16px;height:28px;
+  background:radial-gradient(50% 50% at 50% 50%, rgba(120,20,70,.28), transparent 70%);
+  filter:blur(10px);z-index:-1;
+}
+
+/* ── face 1: the addressed front ── */
+.ef{
+  position:absolute;inset:0;
+  border-radius:4px;
+  background:linear-gradient(158deg, #fffbfc 0%, #fdeff5 58%, #fbe4ee 100%);
+  box-shadow:
+    0 2px 6px rgba(120,20,70,.08),
+    0 16px 38px -14px rgba(120,20,70,.26),
+    inset 0 0 0 1px rgba(218,60,139,.22),
+    inset 0 1px 0 rgba(255,255,255,.7);
+  padding:6%;
+  display:grid;
+  /* fixed fractions rather than auto: an auto track sized around the stamps'
+     percentage width squeezes the return address down to two characters */
+  grid-template-columns:1fr 46%;
+  grid-template-rows:auto 1fr;
+  gap:4%;
+  overflow:hidden;
+}
+.ef__return{
+  grid-column:1;grid-row:1;align-self:start;
+  font-size:clamp(7px,1.55vw,9px);letter-spacing:.16em;text-transform:uppercase;
+  color:var(--ink-fine);line-height:1.8;white-space:nowrap;
+}
+.ef__return span{display:block}
+
+.ef__post{
+  grid-column:2;grid-row:1;
+  display:flex;align-items:flex-start;gap:5%;
+  width:100%;
+}
+.stamps{flex:0 0 56%;display:grid;grid-template-columns:1fr 1fr;gap:6%}
+.stamp{display:block}
+.stamp__svg{width:100%;height:auto;display:block;filter:drop-shadow(0 1px 1.5px rgba(120,20,70,.2))}
+.stamp--1{transform:rotate(-2.5deg)}
+.stamp--2{transform:rotate(2deg)}
+.postmark{flex:1;color:var(--pink-deep);opacity:.5;transform:rotate(-7deg);margin-top:7%}
+.postmark__svg{width:100%;height:auto;display:block}
+
+/* the addressed block, centred on the envelope like a handwritten panel */
+.ef__addr{
+  grid-column:1 / -1;grid-row:2;
+  align-self:center;text-align:center;
+  padding-bottom:2%;
+}
+.ef__script{
+  font-family:var(--script);color:var(--pink);
+  font-size:clamp(2.1rem,8.4vw,3.4rem);line-height:.9;
+}
+.ef__to{
+  font-family:var(--script);color:var(--pink);
+  font-size:clamp(1.6rem,6.2vw,2.5rem);line-height:1;margin-top:.06em;
+}
+.ef__rule{
+  display:block;width:clamp(60px,22%,110px);height:1px;margin:clamp(9px,2.4vw,15px) auto;
+  background:linear-gradient(90deg,transparent,var(--pink-line),transparent);
+}
+.ef__fine{
+  font-size:clamp(7.5px,1.9vw,10px);letter-spacing:.28em;text-transform:uppercase;
+  color:var(--ink-fine);
+}
+
+/* ── face 2: the back that opens ──
+   COMPOSITING NOTE: every panel below carries will-change:transform on
+   purpose. .card-slot and .env__flap need their own layers because they
+   animate; once any sibling is promoted the un-promoted ones can be painted
+   out of z-index order by the compositor — the card flashes in front of the
+   envelope mid-animation. Promote any panel added here too. */
+.envelope{
+  position:absolute;inset:0;
+  perspective:1400px;perspective-origin:50% 30%;
+  will-change:transform,opacity;
+}
+.env__back{
+  position:absolute;inset:0;will-change:transform;z-index:1;overflow:hidden;
+  border-radius:4px;
+  background:linear-gradient(158deg, #fffbfc 0%, #fdeef4 60%, #fae1eb 100%);
+  box-shadow:
+    0 2px 6px rgba(120,20,70,.08),
+    0 16px 38px -14px rgba(120,20,70,.26),
+    inset 0 0 0 1px rgba(218,60,139,.22),
+    inset 0 1px 0 rgba(255,255,255,.6);
+}
+/* names across the bottom of the back panel */
+.env__names{
+  position:absolute;z-index:1;left:0;right:0;bottom:7%;
+  text-align:center;white-space:nowrap;
+  font-size:clamp(7px,1.8vw,9px);letter-spacing:.2em;text-transform:uppercase;
+  color:var(--ink-fine);
+}
+.env__lining{
+  position:absolute;left:0;right:0;top:0;height:62%;
+  will-change:transform;z-index:2;opacity:0;
+  background:
+    repeating-conic-gradient(var(--pink) 0% 25%,var(--pink-soft) 0% 50%) 0 0/22px 22px;
+  clip-path:polygon(0 0, 100% 0, 50% 100%);
+  border-radius:4px 4px 0 0;
+}
+.env__front{
+  position:absolute;inset:0;will-change:transform;z-index:6;
+  border-radius:4px;
+  background:linear-gradient(172deg, #fffafc 0%, #fdeef4 60%, #f9dfe9 100%);
+  clip-path:polygon(0 0, 50% 46%, 100% 0, 100% 100%, 0 100%);
+  box-shadow:0 -1px 0 rgba(255,255,255,.5) inset;
+}
+.env__front::before{
+  content:'';position:absolute;inset:0;
+  background:
+    linear-gradient(to bottom right, transparent calc(50% - .5px), rgba(218,60,139,.24) 50%, transparent calc(50% + .5px)),
+    linear-gradient(to bottom left,  transparent calc(50% - .5px), rgba(218,60,139,.24) 50%, transparent calc(50% + .5px));
+  clip-path:polygon(0 0, 50% 46%, 100% 0, 100% 100%, 0 100%);
+}
+.env__flap{
+  position:absolute;left:0;right:0;top:0;height:62%;
+  background:linear-gradient(178deg, #fffbfc 0%, #fbe6ef 92%);
+  clip-path:polygon(0 0, 100% 0, 50% 100%);
+  transform-origin:top center;transform:rotateX(0deg);
+  backface-visibility:visible;border-radius:4px 4px 0 0;
+  z-index:8;will-change:transform;
+}
+.env__flap::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(180deg, rgba(218,60,139,.12) 0%, transparent 26%);
+  clip-path:polygon(0 0, 100% 0, 50% 100%);
+}
+/* "Shhhh…" printed across the flap */
+.env__script{
+  position:absolute;top:15%;left:0;right:0;text-align:center;
+  font-family:var(--script);color:var(--pink);
+  font-size:clamp(18px,5.4vw,30px);line-height:1;
+  opacity:.9;
+}
+
+/* ── the wax seal ── */
+.seal{
+  position:absolute;left:50%;top:58%;
+  width:clamp(50px,14%,64px);aspect-ratio:1;
+  transform:translate(-50%,-50%);
+  will-change:transform,opacity;z-index:9;
+  border:0;padding:0;background:none;cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+}
+.seal__face{
+  position:absolute;inset:0;display:grid;place-items:center;border-radius:50%;
+  background:radial-gradient(68% 68% at 34% 28%, #ff7ec0 0%, var(--pink) 50%, #8e0d4f 100%);
+  box-shadow:
+    0 3px 9px rgba(120,20,70,.34),
+    inset 0 0 0 1px rgba(255,255,255,.3),
+    inset 0 0 0 4px rgba(255,255,255,.18);
+  transition:transform .35s var(--ease-out);
+}
+.seal:hover .seal__face{transform:scale(1.05)}
+.seal:focus-visible .seal__face{outline:2px solid var(--pink-deep);outline-offset:4px}
+.seal__mono{
+  font-family:'Playfair Display','Didot',Georgia,serif;font-weight:900;
+  font-size:clamp(16px,4.2vw,21px);letter-spacing:.01em;color:#fff9fc;line-height:1;
+}
+
+/* ── the cue under the envelope ── */
+.cue{
+  margin-top:30px;
+  font-size:10.5px;letter-spacing:.34em;text-transform:uppercase;
+  color:var(--pink-deep);opacity:.85;
+  animation:breathe 2.9s ease-in-out infinite;
+}
+@keyframes breathe{
+  0%,100%{opacity:.42;transform:translateY(0)}
+  50%    {opacity:.95;transform:translateY(-2px)}
+}
+.opener__fine{
+  margin-top:14px;max-width:30ch;text-align:center;
+  font-size:.8rem;line-height:1.5;color:var(--ink-fine);
+}
+
+/* ── the card while it is inside the envelope ── */
+.card-slot{
+  position:absolute;left:50%;top:50%;
+  width:var(--card-w);
+  /* it lies on its side inside the landscape envelope and stands up during the
+     final settle — envelope.js owns this transform from load onward */
+  transform:translate(-50%,-50%) rotate(90deg) scale(.3);
+  transform-origin:50% 50%;
+  z-index:4;will-change:transform;pointer-events:none;
+}
+/* lifted out of the envelope for the final flight, so it stops being stacked
+   under the front panel; envelope.js drives it in viewport coordinates */
+.card-slot.is-out{
+  position:fixed;left:0;top:0;
+  z-index:120;
+}
+
 
 /* ═══ buttons ═══ */
 .btn{
@@ -178,15 +365,15 @@ a{color:inherit}
   transition:transform .25s var(--ease),box-shadow .25s var(--ease),
              background-color .25s,color .25s,border-color .25s;
 }
-.btn--primary{background:var(--pink);color:#fff;box-shadow:0 8px 26px rgba(226,42,139,.42)}
-.btn--primary:hover{background:var(--pink-hot);transform:translateY(-2px);box-shadow:0 12px 32px rgba(226,42,139,.55)}
-.btn--ghost{border-color:rgba(217,220,227,.42);color:var(--silver)}
-.btn--ghost:hover{border-color:var(--silver-hi);color:var(--silver-hi);transform:translateY(-2px)}
+.btn--primary{background:var(--pink-ink);color:#fff;box-shadow:0 8px 22px rgba(218,60,139,.3)}
+.btn--primary:hover{background:var(--pink-deep);transform:translateY(-2px);box-shadow:0 12px 28px rgba(218,60,139,.42)}
+.btn--ghost{border-color:rgba(160,29,98,.38);color:var(--pink-deep);background:rgba(255,255,255,.5)}
+.btn--ghost:hover{border-color:var(--pink);color:var(--pink);background:#fff;transform:translateY(-2px)}
 .btn--wide{width:100%}
 .btn:active{transform:translateY(0)}
-.linkish{background:none;border:0;color:var(--text-dim);font:400 .95rem var(--sans);
+.linkish{background:none;border:0;color:var(--ink-soft);font:400 .95rem var(--sans);
   cursor:pointer;padding:6px;text-decoration:underline;text-underline-offset:3px}
-.linkish:hover{color:var(--silver-hi)}
+.linkish:hover{color:var(--pink-deep)}
 
 /* ═══ top bar ═══ */
 .topbar{
@@ -196,15 +383,15 @@ a{color:inherit}
   transform:translateY(-100%);transition:transform .45s var(--ease),background-color .45s,backdrop-filter .45s;
 }
 .topbar.is-stuck{
-  transform:none;background:rgba(21,6,16,.82);backdrop-filter:blur(14px);
-  border-bottom:1px solid rgba(226,42,139,.24);
+  transform:none;background:rgba(253,238,244,.86);backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--pink-line);
 }
-.topbar__mark{font-family:var(--serif);font-size:1.02rem;letter-spacing:.05em;text-decoration:none;color:var(--silver-hi)}
+.topbar__mark{font-family:var(--serif);font-size:1.02rem;letter-spacing:.05em;text-decoration:none;color:var(--pink-deep)}
 .topbar__nav{display:flex;align-items:center;gap:clamp(10px,2.4vw,26px)}
-.topbar__nav a{font-size:.76rem;letter-spacing:.17em;text-transform:uppercase;text-decoration:none;color:var(--text-dim);transition:color .2s}
-.topbar__nav a:hover{color:var(--silver-hi)}
-.topbar__cta{color:#fff !important;background:var(--pink);padding:.72em 1.3em;border-radius:999px}
-.topbar__cta:hover{background:var(--pink-hot)}
+.topbar__nav a{font-size:.76rem;letter-spacing:.17em;text-transform:uppercase;text-decoration:none;color:var(--ink-soft);transition:color .2s}
+.topbar__nav a:hover{color:var(--pink)}
+.topbar__cta{color:#fff !important;background:var(--pink-ink);padding:.72em 1.3em;border-radius:999px}
+.topbar__cta:hover{background:var(--pink-deep)}
 
 /* ═══ layout ═══ */
 main{position:relative;z-index:1}
@@ -212,14 +399,9 @@ main{position:relative;z-index:1}
   max-width:var(--wrap);margin-inline:auto;
   padding:clamp(72px,12vw,132px) clamp(20px,5vw,40px);
 }
-.section--alt{position:relative}
-.section--alt::before{
-  content:'';position:absolute;inset:0 -50vw;z-index:-1;
-  background:linear-gradient(rgba(47,15,38,0),rgba(47,15,38,.66) 18%,rgba(47,15,38,.66) 82%,rgba(47,15,38,0));
-}
-.eyebrow{font-size:.74rem;letter-spacing:.32em;text-transform:uppercase;color:var(--pink-hot);text-align:center}
+.eyebrow{font-size:.74rem;letter-spacing:.32em;text-transform:uppercase;color:var(--pink);text-align:center}
 .section__title{
-  font-family:var(--serif);text-align:center;color:var(--silver-hi);
+  font-family:var(--serif);text-align:center;color:var(--pink-deep);
   font-size:clamp(1.8rem,4.6vw,2.5rem);letter-spacing:.02em;margin-top:.42em;
 }
 .section__title--big{font-size:clamp(2.6rem,8.5vw,4.6rem);margin-bottom:clamp(38px,7vw,64px)}
@@ -228,146 +410,115 @@ main{position:relative;z-index:1}
 .hero{
   position:relative;
   display:flex;flex-direction:column;align-items:center;
-  padding:clamp(56px,11vh,110px) clamp(18px,5vw,40px) 0;
+  padding:clamp(44px,8vh,88px) clamp(18px,5vw,40px) 0;
   min-height:100svh;
 }
-.card{position:relative;width:min(100%,540px)}
+/* the card is laid out at --card-w in both places, so the hand-off out of the
+   envelope is a pure transform with nothing to reflow */
+.card-home{width:var(--card-w);margin-inline:auto}
+.card{position:relative;width:100%}
 .card--invite{
-  /* the printed card's own typography, kept out of the Garamond reset */
-  --serif:  'Playfair Display', 'Didot', Georgia, serif;
-  --sans:   'Jost', 'Futura', 'Avenir Next', system-ui, sans-serif;
-  --script: 'Great Vibes', 'Snell Roundhand', cursive;
-  font-family:var(--sans);
-  background:transparent;text-align:center;
-  padding:clamp(40px,8vw,62px) clamp(26px,6vw,52px) clamp(34px,7vw,54px);
-  box-shadow:0 30px 90px rgba(0,0,0,.6),0 0 70px rgba(226,42,139,.16);
+  /* the invitation is the printed artwork itself — the frame, the checkerboard
+     and every word are in the image, so nothing is drawn around it but a
+     shadow to lift it off the page */
+  background:transparent;
+  box-shadow:0 18px 46px -14px rgba(120,20,70,.34),0 46px 90px -40px rgba(120,20,70,.4);
 }
-.card--invite::before{             /* checkerboard frame, like the printed card */
-  content:'';position:absolute;inset:-16px;z-index:0;
-  background:repeating-conic-gradient(var(--pink) 0% 25%,var(--pink-soft) 0% 50%) 0 0/40px 40px;
-}
-.card--invite::after{              /* the cream card itself */
-  content:'';position:absolute;inset:0;z-index:0;background:var(--cream);
-}
-.card--invite>*{position:relative;z-index:1}
+.invite{width:100%;height:auto;display:block}
 
-/* pink foil inside the cream card — silver would vanish on white */
-.card--invite .foil{
-  background:linear-gradient(100deg,var(--pink) 0%,var(--pink-deep) 26%,var(--pink-hot) 48%,var(--pink-deep) 72%,var(--pink) 100%);
-  background-size:250% 100%;-webkit-background-clip:text;background-clip:text;
+/* The words of the invitation, for anyone whose browser is reading the page
+   rather than showing it. Hidden the same way as .sr — until the image fails,
+   when they become the invitation. */
+.invite__text{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.card--invite.is-missing .invite__text{
+  position:static;width:auto;height:auto;overflow:visible;clip:auto;white-space:normal;
+  display:grid;gap:.8em;text-align:center;
+  background:#fff;border:14px solid var(--pink);
+  padding:clamp(30px,6vw,52px) clamp(20px,5vw,38px);
+  color:var(--pink-deep);
 }
+.card--invite.is-missing h1{
+  font-family:var(--serif);font-size:clamp(2rem,7vw,2.8rem);color:var(--pink);
+  line-height:1.1;
+}
+.card--invite.is-missing strong{color:var(--pink)}
 
-.kicker{font-family:var(--serif);font-weight:700;font-size:.78rem;letter-spacing:.26em;
-  text-transform:uppercase;color:var(--pink-deep)}
-.kicker--tight{margin-top:.4em}
-.script{
-  font-family:var(--script);font-weight:400;color:var(--pink);
-  font-size:clamp(4.1rem,19vw,6.9rem);line-height:.8;margin:.16em 0 .08em;
-  display:grid;
-}
-.sixty{
-  font-family:var(--serif);font-weight:900;
-  font-size:clamp(5.6rem,23vw,8.4rem);line-height:.86;margin:.02em 0 .06em;
-  letter-spacing:-.01em;
-}
-.honoree{
-  font-family:var(--serif);font-weight:800;color:var(--pink);
-  font-size:clamp(2.3rem,9.7vw,3.7rem);letter-spacing:.01em;text-transform:uppercase;
-}
-/* the four silver sparkles scattered across the printed card */
-.card--invite .sparkle{
-  position:absolute;z-index:2;pointer-events:none;
-  width:var(--s,26px);height:var(--s,26px);
-  background:linear-gradient(150deg,#fff,#c6cad3 42%,#9aa0ad);
-  -webkit-mask:var(--star) center/contain no-repeat;
-          mask:var(--star) center/contain no-repeat;
-  --star:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 0c.7 7 4.3 11 12 12-7.7 1-11.3 5-12 12-.7-7-4.3-11-12-12 7.7-1 11.3-5 12-12z' fill='%23000'/%3E%3C/svg%3E");
-  opacity:.85;
-}
-.card--invite .sparkle--a{--s:30px;top:35%;right:2%}
-.card--invite .sparkle--b{--s:19px;top:41.5%;right:10%}
-.card--invite .sparkle--c{--s:26px;top:66%;left:3%}
-.card--invite .sparkle--d{--s:17px;top:70.5%;left:10.5%}
+.hero__actions{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;
+  margin-top:clamp(30px,6vw,44px)}
 
-.dot{display:block;width:9px;height:9px;border-radius:50%;background:var(--pink);margin:clamp(18px,4vw,26px) auto}
-.facts{list-style:none;margin:0;padding:0;display:grid;gap:.24em;
-  font-size:clamp(.95rem,3.4vw,1.06rem);letter-spacing:.11em;text-transform:uppercase;color:var(--pink-deep)}
-.facts strong{font-weight:500;color:var(--pink)}
-.whisper{font-family:var(--sans);font-weight:500;color:var(--pink);
-  font-size:1.05rem;margin-top:clamp(16px,3.6vw,24px);letter-spacing:.005em}
-.hero__actions{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-top:clamp(24px,5vw,34px)}
-.card--invite .btn{font-weight:500}
-.card--invite .btn--ghost{border-color:rgba(168,17,95,.42);color:var(--pink-deep)}
-.card--invite .btn--ghost:hover{border-color:var(--pink);color:var(--pink)}
-
-/* checkerboard rules */
+/* checkerboard rules, echoing the card's border. Two rows deep, not one: a
+   single row of squares reads as a dashed line, because the light square is
+   almost the page ground. */
 .checker{
-  width:100%;height:26px;margin-top:clamp(56px,10vw,96px);
-  background:repeating-conic-gradient(var(--pink) 0% 25%,var(--pink-soft) 0% 50%) 0 0/52px 52px;
+  width:100%;height:48px;margin-top:clamp(56px,10vw,96px);
+  background:repeating-conic-gradient(var(--pink) 0% 25%,var(--pink-soft) 0% 50%) 0 0/48px 48px;
 }
-.checker--thin{height:14px;margin:0 0 clamp(34px,6vw,54px);
-  background-size:28px 28px}
+.checker--thin{height:28px;margin:0 0 clamp(34px,6vw,54px);background-size:28px 28px}
 
 /* ═══ countdown ═══ */
 .countdown{max-width:var(--wrap);margin-inline:auto;padding:clamp(52px,9vw,84px) clamp(20px,5vw,40px) 0;text-align:center}
 .cd{display:flex;flex-wrap:wrap;justify-content:center;gap:clamp(10px,3vw,26px);margin-top:clamp(26px,5vw,38px)}
 .cd__cell{
   min-width:clamp(74px,19vw,116px);padding:clamp(14px,3vw,22px) clamp(8px,2vw,14px);
-  border:1px solid rgba(226,42,139,.3);border-radius:14px;
-  background:rgba(47,15,38,.5);backdrop-filter:blur(6px);
+  border:1px solid var(--pink-line);border-radius:14px;
+  background:rgba(255,255,255,.62);
+  box-shadow:0 6px 20px -12px rgba(120,20,70,.4);
 }
 .cd__num{display:block;font-family:var(--serif);font-weight:700;
   font-size:clamp(1.9rem,6.4vw,2.9rem);line-height:1;font-variant-numeric:tabular-nums}
 .cd__lbl{display:block;margin-top:.55em;font-size:.66rem;letter-spacing:.24em;
-  text-transform:uppercase;color:var(--text-dim)}
+  text-transform:uppercase;color:var(--ink-soft)}
 
 /* ═══ timeline ═══ */
 .timeline{list-style:none;margin:0 auto;padding:0;max-width:640px;position:relative}
 .timeline::before{
   content:'';position:absolute;left:11px;top:14px;bottom:14px;width:1px;
-  background:linear-gradient(rgba(226,42,139,0),rgba(226,42,139,.55) 12%,rgba(226,42,139,.55) 88%,rgba(226,42,139,0));
+  background:linear-gradient(rgba(218,60,139,0),rgba(218,60,139,.5) 12%,rgba(218,60,139,.5) 88%,rgba(218,60,139,0));
 }
 .tl{position:relative;padding:0 0 clamp(34px,6vw,48px) clamp(38px,8vw,58px)}
 .tl:last-child{padding-bottom:0}
 .tl__mark{
   position:absolute;left:0;top:6px;width:23px;height:23px;border-radius:50%;
-  background:radial-gradient(circle at 34% 30%,#fff,#b9bfcb 42%,#6c7180 100%);
-  box-shadow:0 0 0 4px var(--ink),0 0 16px rgba(226,42,139,.5);
+  background:radial-gradient(circle at 34% 30%,#fff,var(--pink-soft) 46%,var(--pink) 100%);
+  /* the ring is the page ground: it masks the rule running behind the dot */
+  box-shadow:0 0 0 4px var(--blush),0 3px 10px -3px rgba(218,60,139,.6);
 }
 .tl--star .tl__mark{
   background:radial-gradient(circle at 34% 30%,#fff,var(--pink-hot) 46%,var(--pink-deep) 100%);
-  box-shadow:0 0 0 4px var(--ink),0 0 26px rgba(255,63,164,.9);
+  box-shadow:0 0 0 4px var(--blush),0 0 0 8px rgba(218,60,139,.22);
   animation:pulse 2.4s ease-in-out infinite;
 }
-@keyframes pulse{0%,100%{box-shadow:0 0 0 4px var(--ink),0 0 18px rgba(255,63,164,.7)}
-                 50%{box-shadow:0 0 0 4px var(--ink),0 0 34px rgba(255,63,164,1)}}
+@keyframes pulse{
+  0%,100%{box-shadow:0 0 0 4px var(--blush),0 0 0 7px rgba(218,60,139,.18)}
+  50%    {box-shadow:0 0 0 4px var(--blush),0 0 0 12px rgba(218,60,139,.05)}
+}
 .tl__time{font-family:var(--serif);font-weight:700;font-size:clamp(1.5rem,5vw,2rem);line-height:1}
 .tl__time em{font-style:normal;font-size:.5em;letter-spacing:.16em;text-transform:uppercase}
-.tl__what{font-family:var(--sans);font-weight:400;font-size:1.16rem;letter-spacing:.15em;
-  text-transform:uppercase;color:var(--silver-hi);margin:.55em 0 .34em}
-.tl__note{color:var(--text-dim);max-width:44ch}
-.tl__note strong{color:var(--pink-hot);font-weight:400}
-.tl--star .tl__what{color:var(--pink-hot)}
+.tl__what{font-family:var(--sans);font-weight:600;font-size:1.16rem;letter-spacing:.15em;
+  text-transform:uppercase;color:var(--pink-deep);margin:.55em 0 .34em}
+.tl__note{color:var(--ink-soft);max-width:44ch}
+.tl__note strong{color:var(--pink);font-weight:600}
+.tl--star .tl__what{color:var(--pink)}
 
 /* ═══ rsvp ═══ */
 .rsvp{max-width:560px;margin-inline:auto}
 .form{display:grid;gap:clamp(18px,3.4vw,24px)}
 .field{display:grid;gap:.5em;border:0;padding:0;margin:0;min-width:0}
-.field label,.field legend{font-size:.74rem;letter-spacing:.22em;text-transform:uppercase;color:var(--text-dim);padding:0}
-.req{color:var(--pink-hot);margin-left:.35em}
+.field label,.field legend{font-size:.74rem;letter-spacing:.22em;text-transform:uppercase;color:var(--ink-soft);padding:0}
+.req{color:var(--pink);margin-left:.35em}
 .field input[type=text],.field input[type=number],.field textarea{
   width:100%;padding:.92em 1.1em;border-radius:12px;
-  border:1px solid rgba(217,220,227,.24);background:rgba(21,9,26,.7);
-  color:var(--text);font:400 1.05rem var(--sans);
-  transition:border-color .2s,box-shadow .2s;
+  border:1px solid rgba(160,29,98,.26);background:rgba(255,255,255,.78);
+  color:var(--ink);font:400 1.05rem var(--sans);
+  transition:border-color .2s,box-shadow .2s,background-color .2s;
 }
 .field textarea{resize:vertical;min-height:5.2em}
-.field input::placeholder,.field textarea::placeholder{color:#7d6674}
+.field input::placeholder,.field textarea::placeholder{color:var(--ink-fine)}
 .field input:focus,.field textarea:focus{
-  outline:none;border-color:var(--pink);box-shadow:0 0 0 3px rgba(226,42,139,.22)}
-.field.has-err input,.field.has-err textarea{border-color:#ff6b8f}
-.hint{font-size:.82rem;color:#8d7382}
-.err{font-size:.82rem;color:#ff8aa6;display:none}
+  outline:none;background:#fff;border-color:var(--pink);box-shadow:0 0 0 3px rgba(218,60,139,.16)}
+.field.has-err input,.field.has-err textarea{border-color:#d81b4a}
+.hint{font-size:.82rem;color:var(--ink-fine)}
+.err{font-size:.82rem;color:#c4143f;display:none}
 .field.has-err .err{display:block}
 
 .choices{display:grid;grid-template-columns:1fr 1fr;gap:12px}
@@ -375,77 +526,56 @@ main{position:relative;z-index:1}
 .choice input{position:absolute;opacity:0;width:0;height:0}
 .choice__box{
   display:grid;gap:.24em;padding:1.05em 1em;border-radius:12px;text-align:center;
-  border:1px solid rgba(217,220,227,.24);background:rgba(21,9,26,.7);
+  border:1px solid rgba(160,29,98,.26);background:rgba(255,255,255,.78);
   transition:border-color .2s,background-color .2s,transform .2s var(--ease);
 }
-.choice__box strong{font-weight:400;font-size:1.06rem;letter-spacing:.1em;text-transform:uppercase;color:var(--silver-hi)}
-.choice__box small{font-size:.78rem;color:#8d7382}
-.choice:hover .choice__box{border-color:rgba(226,42,139,.6);transform:translateY(-2px)}
+.choice__box strong{font-weight:600;font-size:1.06rem;letter-spacing:.1em;text-transform:uppercase;color:var(--pink-deep)}
+.choice__box small{font-size:.78rem;color:var(--ink-fine)}
+.choice:hover .choice__box{border-color:var(--pink);transform:translateY(-2px)}
 .choice input:checked+.choice__box{
-  border-color:var(--pink);background:rgba(226,42,139,.16);box-shadow:0 0 26px rgba(226,42,139,.24)}
-.choice input:focus-visible+.choice__box{outline:2px solid var(--pink-hot);outline-offset:3px}
-.form__fine{font-size:.84rem;color:#8d7382;text-align:center}
-.form__fine strong{color:var(--text-dim);font-weight:400}
+  border-color:var(--pink);background:rgba(218,60,139,.1);box-shadow:0 6px 20px -10px rgba(218,60,139,.6)}
+.choice input:focus-visible+.choice__box{outline:2px solid var(--pink);outline-offset:3px}
+.form__fine{font-size:.84rem;color:var(--ink-fine);text-align:center}
+.form__fine strong{color:var(--ink-soft);font-weight:600}
 
 .sent{display:grid;justify-items:center;gap:16px;text-align:center;
   padding:clamp(26px,5vw,38px);border-radius:18px;
-  border:1px solid rgba(226,42,139,.34);background:rgba(47,15,38,.55);
+  border:1px solid var(--pink-line);background:rgba(255,255,255,.72);
+  box-shadow:0 14px 40px -22px rgba(120,20,70,.5);
   animation:rise .6s var(--ease) both}
-.sent__title{font-family:var(--serif);font-size:clamp(1.5rem,5vw,2rem);color:var(--silver-hi)}
-.sent__copy{color:var(--text-dim);max-width:34ch}
-.sent__copy a{color:var(--pink-hot)}
+@keyframes rise{from{opacity:0;transform:translateY(20px)}}
+.sent__title{font-family:var(--serif);font-size:clamp(1.5rem,5vw,2rem);color:var(--pink-deep)}
+.sent__copy{color:var(--ink-soft);max-width:34ch}
+.sent__copy a{color:var(--pink)}
 .sent__msg{
   width:100%;margin:0;padding:1.1em 1.2em;border-radius:12px;text-align:left;
-  background:rgba(10,3,8,.66);border:1px solid rgba(217,220,227,.16);
-  font:400 .95rem/1.6 var(--sans);color:var(--text-dim);
+  background:rgba(250,221,231,.5);border:1px solid var(--pink-line);
+  font:400 .95rem/1.6 var(--sans);color:var(--ink);
   white-space:pre-wrap;word-break:break-word;max-height:15em;overflow:auto;
 }
 .sent__actions{display:flex;flex-wrap:wrap;gap:10px;justify-content:center}
 
 .secret-strip{
   margin:clamp(46px,8vw,72px) auto 0;max-width:640px;text-align:center;
-  font-size:.76rem;letter-spacing:.24em;text-transform:uppercase;color:var(--pink-hot);
-  padding:1.2em;border-top:1px solid rgba(226,42,139,.28);border-bottom:1px solid rgba(226,42,139,.28);
+  font-size:.76rem;letter-spacing:.24em;text-transform:uppercase;color:var(--pink-deep);
+  padding:1.2em;border-top:1px solid var(--pink-line);border-bottom:1px solid var(--pink-line);
 }
 .secret-strip span{opacity:.6;margin:0 .8em}
 
 /* ═══ footer ═══ */
 .foot{position:relative;z-index:1;text-align:center;padding:0 clamp(20px,5vw,40px) clamp(46px,8vw,72px)}
 .foot__line{font-family:var(--serif);font-style:italic;font-size:clamp(1.9rem,6vw,2.6rem);color:var(--pink)}
-.foot__sub{font-size:.82rem;letter-spacing:.14em;color:var(--text-dim);margin-top:1em}
-.foot__sub strong{color:var(--silver-hi);font-weight:400}
-.foot__sub--dim{color:#7a6270;letter-spacing:.1em;margin-top:.5em}
-
-/* ═══ music toggle ═══ */
-.music{
-  position:fixed;right:clamp(14px,3vw,26px);bottom:clamp(14px,3vw,26px);z-index:70;
-  display:flex;align-items:center;gap:10px;
-  padding:.72em 1.15em .72em .78em;border-radius:999px;cursor:pointer;
-  border:1px solid rgba(226,42,139,.42);background:rgba(21,6,16,.86);backdrop-filter:blur(12px);
-  color:var(--text);font:600 .78rem var(--sans);letter-spacing:.17em;text-transform:uppercase;
-  box-shadow:0 8px 30px rgba(0,0,0,.55);
-  transition:border-color .25s,transform .25s var(--ease),box-shadow .25s;
-}
-.music:hover{transform:translateY(-2px);border-color:var(--pink-hot);box-shadow:0 12px 36px rgba(226,42,139,.4)}
-.music[aria-pressed=true]{border-color:var(--pink-hot);box-shadow:0 0 30px rgba(226,42,139,.5)}
-.music__label{white-space:nowrap}
-.music__eq{display:none;align-items:flex-end;gap:2px;height:14px}
-.music[aria-pressed=true] .music__eq{display:flex}
-.music__eq i{width:2.5px;background:var(--pink-hot);border-radius:2px;animation:eq .9s ease-in-out infinite}
-.music__eq i:nth-child(1){height:40%;animation-delay:0s}
-.music__eq i:nth-child(2){height:90%;animation-delay:.15s}
-.music__eq i:nth-child(3){height:60%;animation-delay:.3s}
-.music__eq i:nth-child(4){height:100%;animation-delay:.45s}
-@keyframes eq{0%,100%{transform:scaleY(.35)}50%{transform:scaleY(1)}}
-.music__ball{box-shadow:inset -3px -4px 8px rgba(0,0,0,.8),0 0 12px rgba(226,42,139,.6)}
+.foot__sub{font-size:.82rem;letter-spacing:.14em;color:var(--ink-soft);margin-top:1em}
+.foot__sub--dim{color:var(--ink-fine);letter-spacing:.1em;margin-top:.5em}
 
 /* ═══ toast ═══ */
 .toast{
-  position:fixed;left:50%;bottom:clamp(78px,14vw,104px);z-index:90;
+  position:fixed;left:50%;bottom:clamp(26px,6vw,44px);z-index:90;
   transform:translate(-50%,14px);opacity:0;pointer-events:none;
   padding:.85em 1.5em;border-radius:999px;
-  background:rgba(21,6,16,.95);border:1px solid rgba(226,42,139,.5);
-  color:var(--text);font-size:.84rem;letter-spacing:.1em;
+  background:var(--pink-deep);color:#fff;
+  box-shadow:0 12px 34px -12px rgba(120,20,70,.7);
+  font-size:.84rem;letter-spacing:.1em;
   transition:opacity .3s,transform .3s var(--ease);
 }
 .toast.is-up{opacity:1;transform:translate(-50%,0)}
@@ -465,18 +595,17 @@ main{position:relative;z-index:1}
 @media (max-width:820px){
   .topbar__nav a:not(.topbar__cta){display:none}
 }
-/* the caps + letter-spacing on the date block wraps on small phones */
-@media (max-width:390px){
-  .facts{font-size:.84rem;letter-spacing:.06em}
-  .whisper{font-size:.98rem}
-}
 @media (max-width:560px){
   body{font-size:17px}
   .choices{grid-template-columns:1fr}
   .cd__cell{min-width:calc(50% - 12px)}
-  .music__label{display:none}
-  .music{padding:.72em}
   .sent__actions .btn{width:100%}
+}
+/* the envelope has to clear the cue and the fine print on short screens */
+@media (max-height:720px){
+  :root{--card-w:min(80vw,380px)}
+  .cue{margin-top:20px}
+  .opener__fine{font-size:.74rem;margin-top:10px}
 }
 
 /* ═══ motion & print ═══ */
@@ -485,10 +614,10 @@ main{position:relative;z-index:1}
   *,*::before,*::after{animation-duration:.001ms !important;animation-iteration-count:1 !important;
     transition-duration:.001ms !important}
   [data-reveal]{opacity:1;transform:none}
-  .foil{color:var(--silver-hi);background:none;-webkit-background-clip:border-box;background-clip:border-box}
-  .card--invite .foil{color:var(--pink)}
+  .cue{animation:none;opacity:.85}
+  .foil{color:var(--pink);background:none;-webkit-background-clip:border-box;background-clip:border-box}
 }
 @media print{
-  .stage,.topbar,.music,.toast,.gate,.hero__actions,.form,.sent{display:none !important}
+  .opener,.topbar,.toast,.hero__actions,.form,.sent{display:none !important}
   body{background:#fff;color:#000}
 }

@@ -12,42 +12,194 @@
 <meta name="googlebot" content="noindex, nofollow, noarchive, nosnippet, noimageindex">
 <!-- deliberately says nothing: this is what a link preview would show -->
 <meta name="description" content="A private invitation.">
-<meta name="theme-color" content="#150610">
+<meta name="theme-color" content="#fadde7">
 
 <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
 
-<!-- Garamond sets the page; the rest belong to the invitation card -->
+<!-- Garamond sets the page; Great Vibes is the envelope's script. Both are on
+     screen before anything is tapped, so both are worth the preload. -->
 <link rel="preload" as="font" type="font/woff2" href="assets/fonts/eb-garamond-400-normal.woff2" crossorigin>
 <link rel="preload" as="font" type="font/woff2" href="assets/fonts/great-vibes-400-normal.woff2" crossorigin>
-<link rel="preload" as="font" type="font/woff2" href="assets/fonts/playfair-display-900-normal.woff2" crossorigin>
-<link rel="preload" as="font" type="font/woff2" href="assets/fonts/playfair-display-800-normal.woff2" crossorigin>
 <link rel="stylesheet" href="assets/css/styles.css">
+
+<!-- Set here, not from a script at the end of the body, so the envelope is
+     covering the page from the very first paint — otherwise the surprise
+     flashes up before the overlay lands on top of it. app.js clears the way
+     if envelope.js never got to run. -->
+<script>document.documentElement.className += ' js';</script>
 </head>
 <body>
 
-<!-- ══ the secret gate ══ -->
-<div class="gate" id="gate" role="dialog" aria-modal="true" aria-labelledby="gate-title">
-  <div class="gate__inner">
-    <div class="ball ball--sm" aria-hidden="true"><i></i><s></s></div>
-    <p class="gate__eyebrow">Before you go any further</p>
-    <h1 class="gate__title" id="gate-title">Shhhh<span class="gate__dots">…</span></h1>
-    <p class="gate__copy">
-      You've found the plan for <strong>Sue Kirke's</strong> surprise 60th.
-      The whole night hinges on one thing: she has no idea.
-    </p>
-    <button class="btn btn--primary" id="gate-btn" type="button">I can keep a secret</button>
-    <p class="gate__fine">Don't post it, don't text her about it, don't leave this open on the counter.</p>
-  </div>
-</div>
+<!-- ══ the envelope: nothing else is reachable until it is opened ══
+     Shown only under .js, so no-JS visitors get the plain page rather than a
+     locked screen. If the script loads but envelope.js bails, app.js opens
+     the way through — nobody is ever left unable to reach the RSVP. -->
+<div class="opener" id="opener">
+  <div class="scene" id="scene">
 
-<!-- ══ ambient disco lighting ══ -->
-<div class="stage" aria-hidden="true">
-  <canvas class="stage__beams" id="beams"></canvas>
-  <div class="stage__glow stage__glow--a"></div>
-  <div class="stage__glow stage__glow--b"></div>
-  <div class="stage__scrim"></div>
-  <div class="stage__grain"></div>
+    <div class="flipper" id="flipper">
+
+      <!-- ─── face 1: the addressed front ─── -->
+      <div class="face face--front" id="faceFront">
+        <div class="ef">
+
+          <p class="ef__return" aria-hidden="true">Oct 24 · 2026<span>Jefferson, Iowa</span></p>
+
+          <div class="ef__addr">
+            <p class="ef__script">A secret</p>
+            <p class="ef__to">worth keeping</p>
+            <span class="ef__rule" aria-hidden="true"></span>
+            <p class="ef__fine">For your eyes only</p>
+          </div>
+
+          <div class="ef__post" aria-hidden="true">
+            <span class="stamps">
+              <!-- stamp 1: the big 60 -->
+              <span class="stamp stamp--1">
+                <svg viewBox="0 0 66 80" class="stamp__svg" xmlns="http://www.w3.org/2000/svg">
+                  <defs>
+                    <mask id="perf-a">
+                      <rect width="66" height="80" fill="#fff"/>
+                      <g fill="#000">
+                        <circle cx="2.6" cy="0" r="3.2"/><circle cx="2.6" cy="80" r="3.2"/>
+                        <circle cx="10.2" cy="0" r="3.2"/><circle cx="10.2" cy="80" r="3.2"/>
+                        <circle cx="17.8" cy="0" r="3.2"/><circle cx="17.8" cy="80" r="3.2"/>
+                        <circle cx="25.4" cy="0" r="3.2"/><circle cx="25.4" cy="80" r="3.2"/>
+                        <circle cx="33" cy="0" r="3.2"/><circle cx="33" cy="80" r="3.2"/>
+                        <circle cx="40.6" cy="0" r="3.2"/><circle cx="40.6" cy="80" r="3.2"/>
+                        <circle cx="48.2" cy="0" r="3.2"/><circle cx="48.2" cy="80" r="3.2"/>
+                        <circle cx="55.8" cy="0" r="3.2"/><circle cx="55.8" cy="80" r="3.2"/>
+                        <circle cx="63.4" cy="0" r="3.2"/><circle cx="63.4" cy="80" r="3.2"/>
+                        <circle cx="0" cy="2" r="3.2"/><circle cx="66" cy="2" r="3.2"/>
+                        <circle cx="0" cy="9.6" r="3.2"/><circle cx="66" cy="9.6" r="3.2"/>
+                        <circle cx="0" cy="17.2" r="3.2"/><circle cx="66" cy="17.2" r="3.2"/>
+                        <circle cx="0" cy="24.8" r="3.2"/><circle cx="66" cy="24.8" r="3.2"/>
+                        <circle cx="0" cy="32.4" r="3.2"/><circle cx="66" cy="32.4" r="3.2"/>
+                        <circle cx="0" cy="40" r="3.2"/><circle cx="66" cy="40" r="3.2"/>
+                        <circle cx="0" cy="47.6" r="3.2"/><circle cx="66" cy="47.6" r="3.2"/>
+                        <circle cx="0" cy="55.2" r="3.2"/><circle cx="66" cy="55.2" r="3.2"/>
+                        <circle cx="0" cy="62.8" r="3.2"/><circle cx="66" cy="62.8" r="3.2"/>
+                        <circle cx="0" cy="70.4" r="3.2"/><circle cx="66" cy="70.4" r="3.2"/>
+                        <circle cx="0" cy="78" r="3.2"/><circle cx="66" cy="78" r="3.2"/>
+                      </g>
+                    </mask>
+                    <linearGradient id="pg-a" x1="0" y1="0" x2="1" y2="1">
+                      <stop offset="0" stop-color="#fffafc"/><stop offset="1" stop-color="#fdeef4"/>
+                    </linearGradient>
+                  </defs>
+                  <g mask="url(#perf-a)">
+                    <rect width="66" height="80" fill="url(#pg-a)"/>
+                    <rect x="5" y="5" width="56" height="58" fill="none" stroke="#e79dc0" stroke-width=".9"/>
+                    <rect x="7" y="7" width="52" height="54" fill="none" stroke="#f6d4e4" stroke-width=".5"/>
+                    <text x="33" y="47" text-anchor="middle" font-family="Georgia,serif" font-weight="bold"
+                          font-size="30" fill="#e22a8b" letter-spacing="-1">60</text>
+                    <text x="9" y="73" font-family="Georgia,serif" font-size="6.4" fill="#a8115f" letter-spacing=".9">USA</text>
+                    <text x="57" y="73" text-anchor="end" font-family="Georgia,serif" font-size="6" fill="#a8115f" letter-spacing=".3">FOREVER</text>
+                  </g>
+                </svg>
+              </span>
+
+              <!-- stamp 2: the checkerboard, straight off the printed card -->
+              <span class="stamp stamp--2">
+                <svg viewBox="0 0 66 80" class="stamp__svg" xmlns="http://www.w3.org/2000/svg">
+                  <defs>
+                    <mask id="perf-b">
+                      <rect width="66" height="80" fill="#fff"/>
+                      <g fill="#000">
+                        <circle cx="2.6" cy="0" r="3.2"/><circle cx="2.6" cy="80" r="3.2"/>
+                        <circle cx="10.2" cy="0" r="3.2"/><circle cx="10.2" cy="80" r="3.2"/>
+                        <circle cx="17.8" cy="0" r="3.2"/><circle cx="17.8" cy="80" r="3.2"/>
+                        <circle cx="25.4" cy="0" r="3.2"/><circle cx="25.4" cy="80" r="3.2"/>
+                        <circle cx="33" cy="0" r="3.2"/><circle cx="33" cy="80" r="3.2"/>
+                        <circle cx="40.6" cy="0" r="3.2"/><circle cx="40.6" cy="80" r="3.2"/>
+                        <circle cx="48.2" cy="0" r="3.2"/><circle cx="48.2" cy="80" r="3.2"/>
+                        <circle cx="55.8" cy="0" r="3.2"/><circle cx="55.8" cy="80" r="3.2"/>
+                        <circle cx="63.4" cy="0" r="3.2"/><circle cx="63.4" cy="80" r="3.2"/>
+                        <circle cx="0" cy="2" r="3.2"/><circle cx="66" cy="2" r="3.2"/>
+                        <circle cx="0" cy="9.6" r="3.2"/><circle cx="66" cy="9.6" r="3.2"/>
+                        <circle cx="0" cy="17.2" r="3.2"/><circle cx="66" cy="17.2" r="3.2"/>
+                        <circle cx="0" cy="24.8" r="3.2"/><circle cx="66" cy="24.8" r="3.2"/>
+                        <circle cx="0" cy="32.4" r="3.2"/><circle cx="66" cy="32.4" r="3.2"/>
+                        <circle cx="0" cy="40" r="3.2"/><circle cx="66" cy="40" r="3.2"/>
+                        <circle cx="0" cy="47.6" r="3.2"/><circle cx="66" cy="47.6" r="3.2"/>
+                        <circle cx="0" cy="55.2" r="3.2"/><circle cx="66" cy="55.2" r="3.2"/>
+                        <circle cx="0" cy="62.8" r="3.2"/><circle cx="66" cy="62.8" r="3.2"/>
+                        <circle cx="0" cy="70.4" r="3.2"/><circle cx="66" cy="70.4" r="3.2"/>
+                        <circle cx="0" cy="78" r="3.2"/><circle cx="66" cy="78" r="3.2"/>
+                      </g>
+                    </mask>
+                    <pattern id="check-b" width="16" height="16" patternUnits="userSpaceOnUse">
+                      <rect width="16" height="16" fill="#fbdce9"/>
+                      <rect width="8" height="8" fill="#e22a8b"/>
+                      <rect x="8" y="8" width="8" height="8" fill="#e22a8b"/>
+                    </pattern>
+                    <linearGradient id="pg-b" x1="0" y1="0" x2="1" y2="1">
+                      <stop offset="0" stop-color="#fffafc"/><stop offset="1" stop-color="#fdeef4"/>
+                    </linearGradient>
+                  </defs>
+                  <g mask="url(#perf-b)">
+                    <rect width="66" height="80" fill="url(#pg-b)"/>
+                    <rect x="5" y="5" width="56" height="58" fill="url(#check-b)" opacity=".9"/>
+                    <rect x="5" y="5" width="56" height="58" fill="none" stroke="#e79dc0" stroke-width=".9"/>
+                    <text x="9" y="73" font-family="Georgia,serif" font-size="6.4" fill="#a8115f" letter-spacing=".9">USA</text>
+                    <text x="57" y="73" text-anchor="end" font-family="Georgia,serif" font-size="6" fill="#a8115f" letter-spacing=".3">FOREVER</text>
+                  </g>
+                </svg>
+              </span>
+            </span>
+
+            <span class="postmark">
+              <svg viewBox="0 0 96 54" class="postmark__svg">
+                <circle cx="27" cy="27" r="21.5" fill="none" stroke="currentColor" stroke-width="1.1"/>
+                <circle cx="27" cy="27" r="17" fill="none" stroke="currentColor" stroke-width=".7"/>
+                <text x="27" y="21" text-anchor="middle" font-family="Georgia,serif"
+                      font-size="5.1" fill="currentColor" letter-spacing=".5">JEFFERSON</text>
+                <text x="27" y="30.5" text-anchor="middle" font-family="Georgia,serif"
+                      font-size="6.4" fill="currentColor" letter-spacing=".4">OCT 24</text>
+                <text x="27" y="38" text-anchor="middle" font-family="Georgia,serif"
+                      font-size="5.4" fill="currentColor" letter-spacing=".6">IOWA 2026</text>
+                <path d="M50 15 q11 4 22 0 M50 22 q11 4 22 0 M50 29 q11 4 22 0 M50 36 q11 4 22 0"
+                      fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/>
+              </svg>
+            </span>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ─── face 2: the back, which opens ─── -->
+      <div class="face face--back" id="faceBack">
+        <div class="envelope" id="envelope">
+
+          <div class="env__back" aria-hidden="true"></div>
+          <div class="env__lining" aria-hidden="true"></div>
+
+          <!-- the invitation card is moved in here on load and back out again
+               when the envelope opens; #card-home in the hero is where it lives -->
+          <div class="card-slot" id="cardSlot"></div>
+
+          <div class="env__front" aria-hidden="true">
+            <span class="env__names">Sue Kirke &nbsp;·&nbsp; Sixty &nbsp;·&nbsp; October 24, 2026</span>
+          </div>
+
+          <div class="env__flap" id="flap" aria-hidden="true">
+            <span class="env__script">Shhhh…</span>
+          </div>
+
+          <button class="seal" id="seal" type="button" aria-label="Break the seal and open the invitation">
+            <span class="seal__face"><span class="seal__mono">60</span></span>
+          </button>
+
+        </div>
+      </div>
+
+    </div>
+
+    <p class="cue" id="cue">Tap to turn it over</p>
+    <p class="opener__fine">It's a surprise — don't post it, don't text her about it.</p>
+
+  </div>
 </div>
 
 <!-- ══ nav ══ -->
@@ -63,41 +215,34 @@
 
   <!-- ══ hero ══ -->
   <section class="hero">
-    <div class="hero__ball">
-      <div class="ball" aria-hidden="true"><i></i><s></s></div>
-      <div class="ball__cord" aria-hidden="true"></div>
+    <div class="card-home" id="card-home">
+
+      <div class="card card--invite" id="card">
+        <!-- The printed invitation itself, not a reconstruction of it. The
+             script, the 60 and SUE KIRKE are set in faces we don't have, so
+             matching them in CSS was never going to be exact. -->
+        <img class="invite" id="invite-img"
+             src="assets/img/invitation.png"
+             srcset="assets/img/invitation-800.png 800w,
+                     assets/img/invitation.png 1200w"
+             sizes="(max-width: 560px) 90vw, 480px"
+             width="1200" height="1680" alt="" decoding="async">
+
+        <!-- Artwork carries no text, so the words live here too: read out by
+             screen readers, and shown outright if the image never arrives. -->
+        <div class="invite__text">
+          <p>Join us for a</p>
+          <h1>Surprise Birthday Party</h1>
+          <p><strong>60</strong> — honoring <strong>Sue Kirke</strong></p>
+          <p>Saturday, October 24, 2026<br>Wild Rose Casino &amp; Hotel<br>Jefferson, Iowa</p>
+          <p>Shhhh… it's a surprise!</p>
+        </div>
+      </div>
     </div>
 
-    <div class="card card--invite" data-reveal>
-      <span class="sparkle sparkle--a" aria-hidden="true"></span>
-      <span class="sparkle sparkle--b" aria-hidden="true"></span>
-      <span class="sparkle sparkle--c" aria-hidden="true"></span>
-      <span class="sparkle sparkle--d" aria-hidden="true"></span>
-
-      <p class="kicker">Join us for a</p>
-      <h1 class="script">
-        <span>Surprise</span>
-        <span>Birthday</span>
-        <span>Party</span>
-      </h1>
-      <p class="sixty foil" aria-label="60th">60</p>
-      <p class="kicker kicker--tight">Honoring</p>
-      <p class="honoree">Sue&nbsp;Kirke</p>
-
-      <span class="dot" aria-hidden="true"></span>
-
-      <ul class="facts">
-        <li><strong>Saturday, October 24, 2026</strong></li>
-        <li>Wild Rose Casino &amp; Hotel</li>
-        <li>Jefferson, Iowa</li>
-      </ul>
-
-      <p class="whisper">Shhhh… it's a surprise!</p>
-
-      <div class="hero__actions">
-        <a class="btn btn--primary" href="#rsvp">RSVP</a>
-        <button class="btn btn--ghost" type="button" id="ics-btn">Add to calendar</button>
-      </div>
+    <div class="hero__actions" data-reveal>
+      <a class="btn btn--primary" href="#rsvp">RSVP</a>
+      <button class="btn btn--ghost" type="button" id="ics-btn">Add to calendar</button>
     </div>
 
     <div class="checker" aria-hidden="true"></div>
@@ -209,7 +354,6 @@
 
       <!-- shown after submit -->
       <div class="sent" id="sent" hidden>
-        <div class="sent__ball ball ball--sm" aria-hidden="true"><i></i><s></s></div>
         <h3 class="sent__title">One more tap</h3>
         <p class="sent__copy">
           Here's your RSVP, ready to go. Send the email and you're on the list.
@@ -225,7 +369,6 @@
 
       <!-- shown after a successful online post (only when an endpoint is configured) -->
       <div class="sent" id="posted" hidden>
-        <div class="sent__ball ball ball--sm" aria-hidden="true"><i></i><s></s></div>
         <h3 class="sent__title">You're on the list</h3>
         <p class="sent__copy" id="posted-copy">Thank you — see you on the 24th.</p>
         <button class="linkish" type="button" id="btn-edit-2">← Send another</button>
@@ -247,18 +390,10 @@
   <p class="foot__sub foot__sub--dim">October 24, 2026 · Wild Rose Casino &amp; Hotel · Jefferson, Iowa</p>
 </footer>
 
-<!-- ══ music ══ -->
-<button class="music" id="music" type="button" aria-pressed="false" aria-label="Play 70's music">
-  <span class="music__ball ball ball--xs" aria-hidden="true"><i></i><s></s></span>
-  <span class="music__label" id="music-label">Turn it up</span>
-  <span class="music__eq" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
-</button>
-
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-<script src="assets/js/rays.js"></script>
-<script src="assets/js/ball.js"></script>
-<script src="assets/js/disco.js"></script>
+<script src="assets/js/gsap.min.js"></script>
+<script src="assets/js/envelope.js"></script>
 <script src="assets/js/app.js"></script>
 </body>
 </html>
