@@ -250,13 +250,18 @@ Design tokens live at the top of `styles.css`. Four worth knowing if you edit:
   so the sweep can't dip below contrast mid-animation.
 - **`[hidden]{display:none !important}` is load-bearing.** Several components are
   `display:grid`, which would otherwise beat the `hidden` attribute.
-- **`.tint` is not decoration.** Two off-viewport strips that exist only so iOS
-  has a solid colour to tint its toolbars from — it samples the edges of the
-  page and skips gradients, so without them the bars go white. They sit above
-  the envelope overlay (unlike the McKenna original, where nothing covers the
-  edges); at `z-index:0` the bars were white on the envelope screen and pink on
-  every screen after it. Their colours have to track the two ends of the
-  `body` wash, and the overlay has to keep using that same wash.
+- **`.tint` is not decoration, and it belongs to the envelope screen only.**
+  Two off-viewport strips that exist so iOS has a solid colour to tint its
+  toolbars from — it samples the page edges and skips gradients, so the bars go
+  white without them. They sit above the envelope overlay (unlike the McKenna
+  original, where nothing covers the edges): at `z-index:0` the bars were white
+  on the envelope and pink on every screen after it. But they are also scoped
+  to that screen, because on the page they made things worse — `body` sets
+  `background-attachment:fixed`, iOS ignores it, so the wash gets sized to the
+  whole document and the bottom strip no longer matches anything, reading as a
+  bar across the page. The overlay is `position:fixed`, so its wash really is
+  viewport-sized and the strips stay invisible. Their colours track the two
+  ends of that wash, and the overlay has to keep using it.
 
 ---
 

@@ -94,10 +94,20 @@ a{color:inherit}
    there the bars fall back to white. These give it a solid colour to find,
    matching the two ends of that wash.
 
-   Ported from the McKenna save-the-date, with one change: there they sit at
-   z-index 0, because nothing covers the edges. Here the envelope overlay is
-   z-index 100 and does, which is why the bars were white on the first screen
-   and pink on every screen after it. They have to be above it.
+   Ported from the McKenna save-the-date, with two changes.
+
+   They sit above the envelope overlay rather than at z-index 0 — the overlay
+   covers both edges, which is why the bars were white on the first screen and
+   pink on every screen after it.
+
+   And they are ONLY on the envelope screen. Once it lifts, the body's own
+   solid background-color is what iOS reads, so the bars were already right
+   there without any help — and the bottom strip actively hurt: `body` sets
+   background-attachment:fixed, which iOS ignores, so on a scrolling page the
+   wash is sized to the whole document and the viewport's bottom edge is far
+   lighter than --blush-2. The strip stopped matching and read as a bar across
+   the bottom of the page. The overlay has no such problem: it is
+   position:fixed, so its wash really is viewport-sized.
 
    Only ~4px of each is ever on screen; the rest is deliberately off-viewport,
    which is where Safari looks. */
@@ -108,7 +118,10 @@ a{color:inherit}
 .tint--top   {top:-8px;    background-color:var(--blush-3)}
 .tint--bottom{bottom:-8px; background-color:var(--blush-2)}
 @supports (-webkit-touch-callout:none){
-  @media (max-width:767px){ .tint{display:block} }
+  /* :not(.is-opened) keeps them to the envelope screen; requiring .js keeps
+     them off the plain page a visitor without it gets, which never has the
+     overlay either */
+  @media (max-width:767px){ .js:not(.is-opened) .tint{display:block} }
 }
 
 /* ═══ pink foil type ═══
