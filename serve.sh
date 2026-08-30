@@ -9,4 +9,4 @@ echo "  Sue is 60  →  http://localhost:$PORT"
 echo "  Ctrl-C to stop"
 echo ""
 ( sleep 1; open "http://localhost:$PORT" ) &
-exec python3 -m http.server "$PORT"
+exec python3 tools/preview.py "$PORT"
