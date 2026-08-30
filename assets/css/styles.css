@@ -88,6 +88,29 @@ a{color:inherit}
 :focus-visible{outline:2px solid var(--pink);outline-offset:3px;border-radius:3px}
 .sr, .cd__sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 
+/* ═══ iOS toolbar tinting ═══
+   Safari reads a thin strip at the very top and bottom of the viewport to
+   colour its toolbars, and skips gradients — so with only the page's wash up
+   there the bars fall back to white. These give it a solid colour to find,
+   matching the two ends of that wash.
+
+   Ported from the McKenna save-the-date, with one change: there they sit at
+   z-index 0, because nothing covers the edges. Here the envelope overlay is
+   z-index 100 and does, which is why the bars were white on the first screen
+   and pink on every screen after it. They have to be above it.
+
+   Only ~4px of each is ever on screen; the rest is deliberately off-viewport,
+   which is where Safari looks. */
+.tint{
+  position:fixed;left:0;width:100%;min-height:12px;
+  z-index:200;pointer-events:none;display:none;
+}
+.tint--top   {top:-8px;    background-color:var(--blush-3)}
+.tint--bottom{bottom:-8px; background-color:var(--blush-2)}
+@supports (-webkit-touch-callout:none){
+  @media (max-width:767px){ .tint{display:block} }
+}
+
 /* ═══ pink foil type ═══
    Silver foil reads as printing on a dark ground and vanishes on blush, so the
    whole page uses the card's pink now. The gradient only ever runs darker than
@@ -117,9 +140,12 @@ a{color:inherit}
   display:flex;
   position:fixed;inset:0;z-index:100;
   padding:max(20px,env(safe-area-inset-top)) 16px max(20px,env(safe-area-inset-bottom));
+  /* deliberately the same ground as <body>: the envelope screen and the page
+     it opens onto have to sample identically at the edges (see .tint), and it
+     also means nothing shifts underfoot when the overlay lifts */
   background-color:var(--blush);
   background-image:
-    radial-gradient(120% 78% at 50% 12%, var(--blush-3) 0%, var(--blush) 48%, var(--blush-2) 100%);
+    radial-gradient(130% 80% at 50% 0%, var(--blush-3) 0%, var(--blush) 44%, var(--blush-2) 100%);
 }
 .opener > *{margin:auto}
 .opener.is-gone{display:none}

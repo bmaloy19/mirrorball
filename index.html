@@ -12,7 +12,8 @@
 <meta name="googlebot" content="noindex, nofollow, noarchive, nosnippet, noimageindex">
 <!-- deliberately says nothing: this is what a link preview would show -->
 <meta name="description" content="A private invitation.">
-<meta name="theme-color" content="#fadde7">
+<!-- keep in step with --blush in styles.css -->
+<meta name="theme-color" content="#f8e2e6">
 
 <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
@@ -30,6 +31,11 @@
 <script>document.documentElement.className += ' js';</script>
 </head>
 <body>
+
+<!-- Solid colours for iOS to tint its toolbars from; see .tint in styles.css.
+     Off-viewport apart from a few pixels, and hidden everywhere but iOS. -->
+<div class="tint tint--top" aria-hidden="true"></div>
+<div class="tint tint--bottom" aria-hidden="true"></div>
 
 <!-- ══ the envelope: nothing else is reachable until it is opened ══
      Shown only under .js, so no-JS visitors get the plain page rather than a
