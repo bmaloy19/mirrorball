@@ -131,56 +131,6 @@
     else watch();
   })();
 
-  /* ═══ countdown ═══ */
-  (function countdown() {
-    var target = new Date(CONFIG.startsAt).getTime();
-    var cells = {
-      days:  $('[data-cd=days]'),
-      hours: $('[data-cd=hours]'),
-      mins:  $('[data-cd=mins]'),
-      secs:  $('[data-cd=secs]')
-    };
-    var sr = $('#cd-sr');
-    var lastDays = null;
-
-    function pad(n) { return n < 10 ? '0' + n : String(n); }
-
-    function tick() {
-      var left = target - Date.now();
-
-      if (left <= 0) {
-        cells.days.textContent  = '00';
-        cells.hours.textContent = '00';
-        cells.mins.textContent  = '00';
-        cells.secs.textContent  = '00';
-        $('#cd-title').textContent = "It's tonight — go, go, go";
-        sr.textContent = 'The party has started.';
-        clearInterval(iv);
-        return;
-      }
-
-      var s = Math.floor(left / 1000);
-      var d = Math.floor(s / 86400);
-      var h = Math.floor(s % 86400 / 3600);
-      var m = Math.floor(s % 3600 / 60);
-
-      cells.days.textContent  = String(d);
-      cells.hours.textContent = pad(h);
-      cells.mins.textContent  = pad(m);
-      cells.secs.textContent  = pad(s % 60);
-
-      /* announce only when the day rolls over — a per-second live
-         region would talk over everything else on the page */
-      if (d !== lastDays) {
-        lastDays = d;
-        sr.textContent = d + ' days until the party.';
-      }
-    }
-
-    tick();
-    var iv = setInterval(tick, 1000);
-  })();
-
   /* ═══ add to calendar ═══ */
   (function calendar() {
     function stamp(d) {

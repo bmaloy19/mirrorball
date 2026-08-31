@@ -86,7 +86,7 @@ h1,h2,h3{margin:0;font-weight:700;line-height:1.06}
 p{margin:0}
 a{color:inherit}
 :focus-visible{outline:2px solid var(--pink);outline-offset:3px;border-radius:3px}
-.sr, .cd__sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 
 /* ═══ iOS toolbar tinting ═══
    Safari reads a thin strip at the very top and bottom of the viewport to
@@ -220,13 +220,6 @@ a{color:inherit}
   gap:4%;
   overflow:hidden;
 }
-.ef__return{
-  grid-column:1;grid-row:1;align-self:start;
-  font-size:clamp(7px,1.55vw,9px);letter-spacing:.16em;text-transform:uppercase;
-  color:var(--ink-fine);line-height:1.8;white-space:nowrap;
-}
-.ef__return span{display:block}
-
 .ef__post{
   grid-column:2;grid-row:1;
   display:flex;align-items:flex-start;gap:5%;
@@ -248,18 +241,14 @@ a{color:inherit}
 }
 .ef__script{
   font-family:var(--script);color:var(--pink);
-  font-size:clamp(2.1rem,8.4vw,3.4rem);line-height:.9;
-}
-.ef__to{
-  font-family:var(--script);color:var(--pink);
-  font-size:clamp(1.6rem,6.2vw,2.5rem);line-height:1;margin-top:.06em;
+  font-size:clamp(1.4rem,5.1vw,2.2rem);line-height:1.1;white-space:nowrap;
 }
 .ef__rule{
   display:block;width:clamp(60px,22%,110px);height:1px;margin:clamp(9px,2.4vw,15px) auto;
   background:linear-gradient(90deg,transparent,var(--pink-line),transparent);
 }
 .ef__fine{
-  font-size:clamp(7.5px,1.9vw,10px);letter-spacing:.28em;text-transform:uppercase;
+  font-size:clamp(7.5px,1.9vw,10px);letter-spacing:.28em;text-transform:lowercase;
   color:var(--ink-fine);
 }
 
@@ -283,13 +272,6 @@ a{color:inherit}
     0 16px 38px -14px rgba(120,20,70,.26),
     inset 0 0 0 1px rgba(218,60,139,.22),
     inset 0 1px 0 rgba(255,255,255,.6);
-}
-/* names across the bottom of the back panel */
-.env__names{
-  position:absolute;z-index:1;left:0;right:0;bottom:7%;
-  text-align:center;white-space:nowrap;
-  font-size:clamp(7px,1.8vw,9px);letter-spacing:.2em;text-transform:uppercase;
-  color:var(--ink-fine);
 }
 .env__lining{
   position:absolute;left:0;right:0;top:0;height:62%;
@@ -370,11 +352,6 @@ a{color:inherit}
   0%,100%{opacity:.42;transform:translateY(0)}
   50%    {opacity:.95;transform:translateY(-2px)}
 }
-.opener__fine{
-  margin-top:14px;max-width:30ch;text-align:center;
-  font-size:.8rem;line-height:1.5;color:var(--ink-fine);
-}
-
 /* ── the card while it is inside the envelope ── */
 .card-slot{
   position:absolute;left:50%;top:50%;
@@ -493,20 +470,6 @@ main{position:relative;z-index:1}
   background:repeating-conic-gradient(var(--pink) 0% 25%,var(--pink-soft) 0% 50%) 0 0/48px 48px;
 }
 .checker--thin{height:28px;margin:0 0 clamp(34px,6vw,54px);background-size:28px 28px}
-
-/* ═══ countdown ═══ */
-.countdown{max-width:var(--wrap);margin-inline:auto;padding:clamp(52px,9vw,84px) clamp(20px,5vw,40px) 0;text-align:center}
-.cd{display:flex;flex-wrap:wrap;justify-content:center;gap:clamp(10px,3vw,26px);margin-top:clamp(26px,5vw,38px)}
-.cd__cell{
-  min-width:clamp(74px,19vw,116px);padding:clamp(14px,3vw,22px) clamp(8px,2vw,14px);
-  border:1px solid var(--pink-line);border-radius:14px;
-  background:rgba(255,255,255,.62);
-  box-shadow:0 6px 20px -12px rgba(120,20,70,.4);
-}
-.cd__num{display:block;font-family:var(--serif);font-weight:700;
-  font-size:clamp(1.9rem,6.4vw,2.9rem);line-height:1;font-variant-numeric:tabular-nums}
-.cd__lbl{display:block;margin-top:.55em;font-size:.66rem;letter-spacing:.24em;
-  text-transform:uppercase;color:var(--ink-soft)}
 
 /* ═══ timeline ═══ */
 .timeline{list-style:none;margin:0 auto;padding:0;max-width:640px;position:relative}
@@ -637,14 +600,12 @@ main{position:relative;z-index:1}
 @media (max-width:560px){
   body{font-size:17px}
   .choices{grid-template-columns:1fr}
-  .cd__cell{min-width:calc(50% - 12px)}
   .sent__actions .btn{width:100%}
 }
-/* the envelope has to clear the cue and the fine print on short screens */
+/* the envelope has to clear the cue on short screens */
 @media (max-height:720px){
   :root{--card-w:min(80vw,380px)}
   .cue{margin-top:20px}
-  .opener__fine{font-size:.74rem;margin-top:10px}
 }
 
 /* ═══ motion & print ═══ */

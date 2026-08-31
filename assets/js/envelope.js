@@ -121,7 +121,6 @@
 
     gsap.timeline({ defaults: { ease: 'power3.out' }, onComplete: function () { finish(false); } })
       .to(cue, { opacity: 0, y: 6, duration: 0.3 }, 0)
-      .to('.opener__fine', { opacity: 0, duration: 0.3 }, 0)
       .to(seal, { scale: 0.68, opacity: 0, rotation: -16, duration: 0.45, ease: 'power2.in' }, 0)
 
       // the script is printed on the flap; it would read mirrored once the
