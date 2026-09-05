@@ -20,9 +20,9 @@
     hostPhoneDisplay: '712.358.0472',
 
     /* ── Where RSVPs are delivered ────────────────────────────
-       Every submission is emailed here. CHANGE THIS to whoever is
-       actually keeping the list before the link goes out — it is
-       currently pointed at a test inbox.
+       Every submission is emailed here. Emily keeps the guest list,
+       so this and listKeeper below name the same person — the page
+       tells guests where their details go.
 
        Delivery runs through FormSubmit, which needs no account:
        the first submission to a new address sends that address a
@@ -30,17 +30,13 @@
        clicked. If the POST ever fails, the page falls back to
        opening a pre-written email so an answer is never lost.
        ───────────────────────────────────────────────────────── */
-    rsvpEmail: 'bmaloy19@gmail.com',
+    rsvpEmail: 'emily.mclaughlin@wildrosecorporate.com',
 
     /* Named on the form as the person keeping the list. Must describe
        whoever actually reads rsvpEmail above — the page states this to
        guests, so the two drifting apart makes the page lie about where
        someone's details are going. */
     listKeeper: 'Emily McLaughlin',
-
-    /* Delete once rsvpEmail is the real address; it only drives a
-       console warning that the test inbox is still wired up. */
-    testInbox: 'bmaloy19@gmail.com',
 
     /* Override to post somewhere else entirely (Formspree, Basin,
        a Google Apps Script). null = build a FormSubmit endpoint
@@ -206,14 +202,6 @@
     var party  = $('#party-field');
 
     $('#rsvp-host').textContent = CONFIG.listKeeper || CONFIG.host;
-
-    if (CONFIG.testInbox && CONFIG.rsvpEmail === CONFIG.testInbox) {
-      console.warn(
-        '[RSVP] Still delivering to the test inbox (' + CONFIG.rsvpEmail + ') while the ' +
-        'form tells guests it goes to ' + (CONFIG.listKeeper || CONFIG.host) + '. ' +
-        'Set CONFIG.rsvpEmail to the real address and drop CONFIG.testInbox.'
-      );
-    }
 
     /* one place to change the address; the endpoint follows it */
     function endpoint() {

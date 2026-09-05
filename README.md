@@ -69,7 +69,7 @@ Posts through **FormSubmit**, which needs no account. Set one value in
 [`assets/js/app.js`](assets/js/app.js):
 
 ```js
-rsvpEmail: 'bmaloy19@gmail.com',
+rsvpEmail: 'emily.mclaughlin@wildrosecorporate.com',
 ```
 
 **A new address must be activated once.** The first submission to it makes
@@ -273,8 +273,7 @@ Design tokens live at the top of `styles.css`. Four worth knowing if you edit:
 |---|---|---|
 | **Party end time** | The calendar file guesses **11:00 pm** | The actual end time → `CONFIG.endsAt` in `app.js` |
 | **Photos of the guest of honour** | None on the page | Pictures. A hero shot or a small gallery would lift this more than anything else on this list |
-| **RSVP address** | Pointed at a **test inbox** (`bmaloy19@gmail.com`) and awaiting activation | Click the FormSubmit *"Activate Form"* email, then set `rsvpEmail` to whoever really keeps the list and delete `testInbox` |
-| **Who the form names** | The form names `listKeeper` to guests while delivery goes to the test inbox | Keep `listKeeper` and `rsvpEmail` describing the same person. A console warning fires while they disagree |
+| **RSVP address** | Pointed at Emily (`emily.mclaughlin@wildrosecorporate.com`) — **not yet activated** | Activation is per address, so the earlier one on the test inbox does not carry over. Send one test RSVP yourself: it is consumed making FormSubmit email Emily an *"Activate Form"* link. Once she clicks it, send a second test to confirm it lands. Do this before the link goes to guests |
 
 ### Waiting on your eyes
 
@@ -287,8 +286,9 @@ Design tokens live at the top of `styles.css`. Four worth knowing if you edit:
 
 - **The site is public and carries a personal phone number.** The envelope stops
   an accidental open from spilling the page — nothing shows until someone works
-  through two taps — but it's a guessable URL on the open internet. Setting `rsvpEmail` and deleting `hostPhone` / `hostPhoneDisplay`
-  removes the number entirely.
+  through two taps — but it's a guessable URL on the open internet. Deleting
+  `hostPhone` / `hostPhoneDisplay` removes the number entirely, now that RSVPs
+  reach Emily through the form.
 - **Keeping it out of Google** is handled by the `noindex` meta tag, and
   `robots.txt` deliberately **allows** crawling so that tag can actually be read.
   Blocking crawlers would be worse: one that can't fetch the page never sees the
